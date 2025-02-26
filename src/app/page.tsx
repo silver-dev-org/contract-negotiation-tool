@@ -1,5 +1,27 @@
+"use client";
+import {
+  CategoryScale,
+  Chart,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+} from "chart.js";
 import Link from "next/link";
 import React from "react";
+import { Line } from "react-chartjs-2";
+
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function InputField({
   label,
@@ -40,6 +62,54 @@ function Fieldset({
       <legend className="text-xl font-semibold">{legend}</legend>
       <div className="space-y-2 mt-2">{children}</div>
     </fieldset>
+  );
+}
+
+function PlacementsChart() {
+  const labels = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+  ];
+  return (
+    <Line
+      options={{
+        responsive: true,
+        interaction: {
+          mode: "index",
+          intersect: false,
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "Placements",
+            },
+          },
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              title: (tooltipItems) => `${tooltipItems[0].label} placements`,
+            },
+          },
+        },
+      }}
+      data={{
+        labels: [...Array(10).keys()],
+        datasets: [
+          {
+            label: "Price",
+            borderColor: "#fa4529",
+            data: [...Array(10).keys()],
+          },
+        ],
+      }}
+    />
   );
 }
 
@@ -85,7 +155,8 @@ export default function Home() {
         <h1 className="text-5xl text-center font-bold mb-4 text-foreground">
           Contract Negotiation Tool
         </h1>
-        <form className="space-y-4">
+        <PlacementsChart></PlacementsChart>
+        <form className="space-y-4 mt-8">
           <div className="flex flex-col lg:flex-row lg:space-x-4">
             <Fieldset legend="Fees">
               <InputField

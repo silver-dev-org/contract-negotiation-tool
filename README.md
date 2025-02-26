@@ -1,4 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📝 Contract Negotiation Tool for Silver.dev
+
+## Introduction
+
+Every agency needs to negotiate with a prospective client. Discussing mathematical formulas with language is awkward, and the email back and forth is lengthy and uncomfortable.
+
+We want to build a tool that makes it easier and more formal to communicate a negotiation, one in which each party's interests are best represented for maximum utility.
+
+## Objectives
+
+- Create a tool that models and expresses contract value more accurately than pure intuition
+- Create a tool that improves negotiations between clients and agencies
+
+## Goals
+
+- Create a single-page tool that allows any anonymous user to gauge contract value
+- [Stretch] Automatize tool → actual contract creation
+
+### Design
+
+![Mock-up](./mockup.png)
+
+- There are multiple features to consider for the model:
+  - Financials (deferred payment, pure contingency/retainer, financing, credit card processing)
+  - Discounts for volume, promotions
+  - Exclusivity discounts
+- Example prompt: <https://chatgpt.com/share/67bdc5f6-4ce8-800e-aa11-5641c80418ac>
 
 ## Getting Started
 

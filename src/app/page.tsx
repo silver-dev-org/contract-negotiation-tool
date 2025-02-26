@@ -66,15 +66,6 @@ function Fieldset({
 }
 
 function PlacementsChart() {
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
   return (
     <Line
       options={{

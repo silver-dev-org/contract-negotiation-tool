@@ -40,7 +40,7 @@ export default function Home() {
       }
       setYs(
         xs.map((placements) => {
-          const baseFee = parseFloat(data.b);
+          const baseFeePerPlacement = parseFloat(data.b);
           const firstHireDiscount = parseFloat(data.d);
           const retainerFee = parseFloat(data.r);
           const guaranteeCost = parseFloat(data.g);
@@ -48,16 +48,18 @@ export default function Home() {
           const advancePaymentBonus = parseFloat(data.a);
           const creditCardFees = parseFloat(data.cc);
           const replacementProbability = parseFloat(data.p);
-          const feeReduction = parseFloat(data.f);
+          const feeReductionPerReplacement = parseFloat(data.f);
 
           let value =
-            placements * baseFee * (1 - firstHireDiscount) +
+            placements * baseFeePerPlacement * (1 - firstHireDiscount) +
+            advancePaymentBonus +
             retainerFee -
-            replacementProbability * feeReduction -
-            guaranteeCost +
-            advancePaymentBonus;
-
-          value = value - installmentDiscount * value - creditCardFees * value;
+            guaranteeCost -
+            replacementProbability *
+              baseFeePerPlacement *
+              feeReductionPerReplacement;
+          value -= installmentDiscount * value;
+          value -= creditCardFees * value;
           return Math.round(value);
         })
       );

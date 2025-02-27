@@ -30,7 +30,9 @@ export function ContractForm({
             label="Fee Reduction per Replacement:"
             name="f"
             step="0.01"
-            placeholder="e.g., 500"
+            min="0"
+            max="1"
+            placeholder="e.g., 0.5 for 50%"
           />
         </Fieldset>
         <Fieldset legend="Financials">
@@ -42,7 +44,7 @@ export function ContractForm({
             placeholder="e.g., 0.1 for 10%"
           />
           <InputField
-            label="Installment Discount Factor:"
+            label="Installment Discount:"
             name="i"
             step="0.01"
             min="0"

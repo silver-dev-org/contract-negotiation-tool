@@ -1,9 +1,30 @@
 "use client";
 import { ContractForm, Navbar, PlacementsChart } from "@/components";
 import { useSearchParams } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 
-export default function Home() {
+export default function Page() {
+  return (
+    <>
+      <Navbar />
+      <main className="max-w-5xl mx-auto p-8 bg-background rounded-lg">
+        <Suspense fallback={<MainContentFallback />}>
+          <MainContent />
+        </Suspense>
+      </main>
+    </>
+  );
+}
+
+function MainContentFallback() {
+  return (
+    <h1 className="text-5xl text-center font-bold mb-4 text-foreground">
+      Loading...
+    </h1>
+  );
+}
+
+function MainContent() {
   const [coords, setCoords] = useState<[number, number][]>([]);
   const params = useSearchParams();
   const shouldContractShowForm = params.toString().length === 0;
@@ -75,16 +96,13 @@ export default function Home() {
 
   return (
     <>
-      <Navbar />
-      <main className="max-w-5xl mx-auto p-8 bg-background rounded-lg">
-        <h1 className="text-5xl text-center font-bold mb-4 text-foreground">
-          {shouldContractShowForm
-            ? "Contract Negotiation Tool"
-            : `Contract offers for ${clientName}`}
-        </h1>
-        <PlacementsChart coords={coords} />
-        {shouldContractShowForm && <ContractForm onInput={onFormInput} />}
-      </main>
+      <h1 className="text-5xl text-center font-bold mb-4 text-foreground">
+        {shouldContractShowForm
+          ? "Contract Negotiation Tool"
+          : `Contract offers for ${clientName}`}
+      </h1>
+      <PlacementsChart coords={coords} />
+      {shouldContractShowForm && <ContractForm onInput={onFormInput} />}
     </>
   );
 }

@@ -90,7 +90,7 @@ export function ContractForm({
       </div>
       <button
         type="submit"
-        className="w-full bg-primary text-primary-foreground font-semibold py-2 rounded-lg hover:bg-primary/90"
+        className="w-full bg-primary text-white uppercase border border-white font-semibold py-2 rounded-sm hover:bg-primary/90"
       >
         Share Model
       </button>

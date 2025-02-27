@@ -4,8 +4,8 @@ export function ContractForm({
   ...props
 }: FormHTMLAttributes<HTMLFormElement>) {
   return (
-    <form id="form" className="space-y-4 mt-8" {...props}>
-      <div className="flex flex-col lg:flex-row lg:space-x-4">
+    <form id="form" className="space-y-4" {...props}>
+      <div className="flex flex-col lg:flex-row lg:space-x-4 mb-4">
         <Fieldset legend="Fees">
           <InputField
             label="Base Fee per Successful Placement:"
@@ -132,7 +132,7 @@ function Fieldset({
   children: React.ReactNode;
 }) {
   return (
-    <fieldset className="flex-grow">
+    <fieldset className="flex-grow mt-8">
       <legend className="text-xl font-semibold">{legend}</legend>
       <div className="space-y-2 mt-2">{children}</div>
     </fieldset>

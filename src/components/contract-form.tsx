@@ -11,7 +11,7 @@ export function ContractForm({
             label="Base Fee per Successful Placement:"
             name="b"
             step="0.01"
-            placeholder="e.g., 10000"
+            placeholder="e.g., 10000 for $10,000"
           />
           <InputField
             label="Credit Card Processing Fees:"
@@ -24,7 +24,7 @@ export function ContractForm({
             label="Retainer Fee:"
             name="r"
             step="0.01"
-            placeholder="e.g., 1500"
+            placeholder="e.g., 1500 for $1,500"
           />
           <InputField
             label="Fee Reduction per Replacement:"
@@ -54,13 +54,13 @@ export function ContractForm({
             label="Advance Payment Bonus:"
             name="a"
             step="0.01"
-            placeholder="e.g., 500"
+            placeholder="e.g., 500 for $500"
           />
           <InputField
             label="Guarantee Cost:"
             name="g"
             step="0.01"
-            placeholder="e.g., 2000"
+            placeholder="e.g., 2000 for $2,000"
           />
         </Fieldset>
         <Fieldset legend="Special Terms">

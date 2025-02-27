@@ -1,6 +1,6 @@
 export function Navbar() {
   return (
-    <header className="py-4 px-6 border-b-gray-800 border-b-solid border-b-2 flex justify-center">
+    <header className="py-4 px-6 border-b-gray-800 border-b-solid border-b flex justify-center">
       <div className="container flex justify-between">
         <a
           href="/"

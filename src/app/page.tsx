@@ -24,31 +24,29 @@ export default function Home() {
     (entries: [string, string][]): boolean => {
       const data = Object.fromEntries(entries);
       if (
-        !data.baseFee ||
-        !data.firstHireDiscount ||
-        !data.retainerFee ||
-        !data.guaranteeCost ||
-        !data.installmentDiscount ||
-        !data.advancePaymentBonus ||
-        !data.creditCardFees ||
-        !data.replacementProbability ||
-        !data.feeReduction
+        !data.b ||
+        !data.d ||
+        !data.r ||
+        !data.g ||
+        !data.i ||
+        !data.a ||
+        !data.c ||
+        !data.p ||
+        !data.f
       ) {
         return false;
       }
       setYs(
         xs.map((placements) => {
-          const baseFee = parseFloat(data.baseFee);
-          const firstHireDiscount = parseFloat(data.firstHireDiscount);
-          const retainerFee = parseFloat(data.retainerFee);
-          const guaranteeCost = parseFloat(data.guaranteeCost);
-          const installmentDiscount = parseFloat(data.installmentDiscount);
-          const advancePaymentBonus = parseFloat(data.advancePaymentBonus);
-          const creditCardFees = parseFloat(data.creditCardFees);
-          const replacementProbability = parseFloat(
-            data.replacementProbability
-          );
-          const feeReduction = parseFloat(data.feeReduction);
+          const baseFee = parseFloat(data.b);
+          const firstHireDiscount = parseFloat(data.d);
+          const retainerFee = parseFloat(data.r);
+          const guaranteeCost = parseFloat(data.g);
+          const installmentDiscount = parseFloat(data.i);
+          const advancePaymentBonus = parseFloat(data.a);
+          const creditCardFees = parseFloat(data.c);
+          const replacementProbability = parseFloat(data.p);
+          const feeReduction = parseFloat(data.f);
 
           let value =
             placements * baseFee * (1 - firstHireDiscount) +

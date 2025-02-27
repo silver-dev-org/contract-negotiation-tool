@@ -9,26 +9,26 @@ export function ContractForm({
         <Fieldset legend="Fees">
           <InputField
             label="Base Fee per Successful Placement:"
-            name="baseFee"
+            name="b"
             step="0.01"
             placeholder="e.g., 10000"
           />
           <InputField
             label="Credit Card Processing Fees:"
-            name="creditCardFees"
+            name="c"
             step="0.01"
             min="0"
             placeholder="e.g., 0.03 for 3%"
           />
           <InputField
             label="Retainer Fee:"
-            name="retainerFee"
+            name="r"
             step="0.01"
             placeholder="e.g., 1500"
           />
           <InputField
             label="Fee Reduction per Replacement:"
-            name="feeReduction"
+            name="f"
             step="0.01"
             placeholder="e.g., 500"
           />
@@ -36,27 +36,27 @@ export function ContractForm({
         <Fieldset legend="Financials">
           <InputField
             label="First Hire Discount:"
-            name="firstHireDiscount"
+            name="d"
             step="0.01"
             min="0"
             placeholder="e.g., 0.1 for 10%"
           />
           <InputField
             label="Installment Discount Factor:"
-            name="installmentDiscount"
+            name="i"
             step="0.01"
             min="0"
             placeholder="e.g., 0.05 for 5%"
           />
           <InputField
             label="Advance Payment Bonus:"
-            name="advancePaymentBonus"
+            name="a"
             step="0.01"
             placeholder="e.g., 500"
           />
           <InputField
             label="Guarantee Cost:"
-            name="guaranteeCost"
+            name="g"
             step="0.01"
             placeholder="e.g., 2000"
           />
@@ -64,7 +64,7 @@ export function ContractForm({
         <Fieldset legend="Special Terms">
           <InputField
             label="Probability of Candidate Replacement:"
-            name="replacementProbability"
+            name="p"
             step="0.01"
             min="0"
             max="1"

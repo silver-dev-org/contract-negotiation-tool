@@ -169,8 +169,8 @@ export default function Home() {
 
   const updatePlacementsChart = useCallback(
     (entries: [string, string][]): boolean => {
-    const data = Object.fromEntries(entries);
-    if (
+      const data = Object.fromEntries(entries);
+      if (
         !data.baseFee ||
         !data.firstHireDiscount ||
         !data.retainerFee ||
@@ -180,11 +180,11 @@ export default function Home() {
         !data.creditCardFees ||
         !data.replacementProbability ||
         !data.feeReduction
-    ) {
-      return false;
-    }
-    setYs(
-      xs.map((placements) => {
+      ) {
+        return false;
+      }
+      setYs(
+        xs.map((placements) => {
           const baseFee = parseFloat(data.baseFee);
           const firstHireDiscount = parseFloat(data.firstHireDiscount);
           const retainerFee = parseFloat(data.retainerFee);
@@ -192,23 +192,23 @@ export default function Home() {
           const installmentDiscount = parseFloat(data.installmentDiscount);
           const advancePaymentBonus = parseFloat(data.advancePaymentBonus);
           const creditCardFees = parseFloat(data.creditCardFees);
-        const replacementProbability = parseFloat(
+          const replacementProbability = parseFloat(
             data.replacementProbability
-        );
+          );
           const feeReduction = parseFloat(data.feeReduction);
 
-        let value =
-          placements * baseFee * (1 - firstHireDiscount) +
-          retainerFee -
-          replacementProbability * feeReduction -
-          guaranteeCost +
-          advancePaymentBonus;
+          let value =
+            placements * baseFee * (1 - firstHireDiscount) +
+            retainerFee -
+            replacementProbability * feeReduction -
+            guaranteeCost +
+            advancePaymentBonus;
 
-        value = value - installmentDiscount * value - creditCardFees * value;
-        return Math.round(value);
-      })
-    );
-    return true;
+          value = value - installmentDiscount * value - creditCardFees * value;
+          return Math.round(value);
+        })
+      );
+      return true;
     },
     [xs]
   );
@@ -225,12 +225,12 @@ export default function Home() {
 
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar />
       <main className="max-w-5xl mx-auto p-8 bg-background rounded-lg">
         <h1 className="text-5xl text-center font-bold mb-4 text-foreground">
           Contract Negotiation Tool
         </h1>
-        <PlacementsChart xs={xs} ys={ys}></PlacementsChart>
+        <PlacementsChart xs={xs} ys={ys} />
         {shouldShowForm && (
           <form id="form" className="space-y-4 mt-8" onInput={onFormInput}>
             <div className="flex flex-col lg:flex-row lg:space-x-4">

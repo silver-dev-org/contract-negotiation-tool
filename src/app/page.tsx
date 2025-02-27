@@ -7,12 +7,14 @@ export default function Home() {
     useState<boolean>(false);
   const xs: number[] = [...Array(10).keys()].map((i) => i + 1);
   const [ys, setYs] = useState<number[]>([]);
+  const [clientName, setClientName] = useState("");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const shouldContractShowForm = params.toString().length === 0;
     setShouldShowContractForm(shouldContractShowForm);
     if (!shouldContractShowForm) {
+      setClientName(params.get("c") ?? "your company");
       const chartWasUpdated = calculatePrices(params.entries().toArray());
       if (!chartWasUpdated) {
         alert("There are missing fields.");
@@ -30,7 +32,7 @@ export default function Home() {
         !data.g ||
         !data.i ||
         !data.a ||
-        !data.c ||
+        !data.cc ||
         !data.p ||
         !data.f
       ) {
@@ -44,7 +46,7 @@ export default function Home() {
           const guaranteeCost = parseFloat(data.g);
           const installmentDiscount = parseFloat(data.i);
           const advancePaymentBonus = parseFloat(data.a);
-          const creditCardFees = parseFloat(data.c);
+          const creditCardFees = parseFloat(data.cc);
           const replacementProbability = parseFloat(data.p);
           const feeReduction = parseFloat(data.f);
 
@@ -79,7 +81,9 @@ export default function Home() {
       <Navbar />
       <main className="max-w-5xl mx-auto p-8 bg-background rounded-lg">
         <h1 className="text-5xl text-center font-bold mb-4 text-foreground">
-          Contract Negotiation Tool
+          {shouldContractShowForm
+            ? "Contract Negotiation Tool"
+            : `Contract offers for ${clientName}`}
         </h1>
         <PlacementsChart xs={xs} ys={ys} />
         {shouldContractShowForm && <ContractForm onInput={onFormInput} />}

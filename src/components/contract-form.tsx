@@ -15,7 +15,7 @@ export function ContractForm({
           />
           <InputField
             label="Credit Card Processing Fees:"
-            name="c"
+            name="cc"
             step="0.01"
             min="0"
             placeholder="e.g., 0.03 for 3%"
@@ -62,6 +62,12 @@ export function ContractForm({
           />
         </Fieldset>
         <Fieldset legend="Special Terms">
+          <InputField
+            label="Client name"
+            name="c"
+            placeholder="e.g., Ramp"
+            type="text"
+          />
           <InputField
             label="Probability of Candidate Replacement:"
             name="p"

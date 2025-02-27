@@ -1,28 +1,24 @@
 "use client";
 import { ContractForm, Navbar, PlacementsChart } from "@/components";
+import { useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
 export default function Home() {
-  const [shouldContractShowForm, setShouldShowContractForm] =
-    useState<boolean>(false);
-  const [xs, setXs] = useState<number[]>([]);
-  const [ys, setYs] = useState<number[]>([]);
-  const [clientName, setClientName] = useState("");
+  const [coords, setCoords] = useState<[number, number][]>([]);
+  const params = useSearchParams();
+  const shouldContractShowForm = params.toString().length === 0;
+  const clientName = params.get("c") ?? "your company";
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const shouldContractShowForm = params.toString().length === 0;
-    setShouldShowContractForm(shouldContractShowForm);
     if (!shouldContractShowForm) {
-      setClientName(params.get("c") ?? "your company");
-      const couldCalculate = calculatePrices(params.entries().toArray());
+      const couldCalculate = calculateCoords(params.entries().toArray());
       if (!couldCalculate) {
         alert("There are missing fields.");
       }
     }
   }, []);
 
-  function calculatePrices(entries: [string, string][]): boolean {
+  function calculateCoords(entries: [string, string][]): boolean {
     const data = Object.fromEntries(entries);
     if (
       !data.h ||
@@ -38,10 +34,9 @@ export default function Home() {
     ) {
       return false;
     }
-    const xs = [...Array(parseInt(data.h)).keys()].map((i) => i + 1);
-    setXs(xs);
-    setYs(
-      xs.map((placements) => {
+    setCoords(
+      [...Array(parseInt(data.h)).keys()].map((i) => {
+        const placements = i + 1;
         const baseFeePerPlacement = parseFloat(data.b);
         const firstHireDiscount = parseFloat(data.d);
         const retainerFee = parseFloat(data.r);
@@ -51,8 +46,7 @@ export default function Home() {
         const creditCardFees = parseFloat(data.cc);
         const replacementProbability = parseFloat(data.p);
         const feeReductionPerReplacement = parseFloat(data.f);
-
-        let value =
+        let price =
           placements * baseFeePerPlacement * (1 - firstHireDiscount) +
           advancePaymentBonus +
           retainerFee -
@@ -60,9 +54,10 @@ export default function Home() {
           replacementProbability *
             baseFeePerPlacement *
             feeReductionPerReplacement;
-        value -= installmentDiscount * value;
-        value -= creditCardFees * value;
-        return Math.round(value);
+        price -= installmentDiscount * price;
+        price -= creditCardFees * price;
+        price = parseFloat(price.toFixed(2));
+        return [placements, price];
       })
     );
     return true;
@@ -70,7 +65,7 @@ export default function Home() {
 
   function onFormInput(event: FormEvent) {
     const form = event.currentTarget as HTMLFormElement;
-    calculatePrices(
+    calculateCoords(
       new FormData(form)
         .entries()
         .toArray()
@@ -87,7 +82,7 @@ export default function Home() {
             ? "Contract Negotiation Tool"
             : `Contract offers for ${clientName}`}
         </h1>
-        <PlacementsChart xs={xs} ys={ys} />
+        <PlacementsChart coords={coords} />
         {shouldContractShowForm && <ContractForm onInput={onFormInput} />}
       </main>
     </>

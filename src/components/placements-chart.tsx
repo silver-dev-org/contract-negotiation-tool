@@ -20,7 +20,7 @@ Chart.register(
   Legend
 );
 
-export function PlacementsChart({ xs, ys }: { xs: number[]; ys: number[] }) {
+export function PlacementsChart({ coords }: { coords: [number, number][] }) {
   return (
     <Line
       options={{
@@ -46,12 +46,12 @@ export function PlacementsChart({ xs, ys }: { xs: number[]; ys: number[] }) {
         },
       }}
       data={{
-        labels: xs,
+        labels: coords.map(([x, y]) => x),
         datasets: [
           {
             label: "Price",
             borderColor: "#fa4529",
-            data: ys,
+            data: coords.map(([x, y]) => y),
           },
         ],
       }}

@@ -58,13 +58,13 @@ export function PlacementsChart({ coords }: { coords: [number, number][] }) {
         },
       }}
       data={{
-        labels: coords.map(([x, y]) => x),
+        labels: coords.map((coord) => coord[0]),
         datasets: [
           {
             label: "Price",
             pointBackgroundColor: "white",
             borderColor: "#fa4529",
-            data: coords.map(([x, y]) => y),
+            data: coords.map((coord) => coord[1]),
           },
         ],
       }}

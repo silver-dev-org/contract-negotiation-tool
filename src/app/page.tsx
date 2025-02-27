@@ -9,8 +9,13 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import Link from "next/link";
-import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import {
+  FormEvent,
+  InputHTMLAttributes,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { Line } from "react-chartjs-2";
 
 Chart.register(
@@ -32,8 +37,7 @@ function InputField({
   label: string;
   name: string;
   type?: string;
-  [key: string]: any;
-}) {
+} & InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div className="flex flex-col">
       <label htmlFor={name} className="font-medium">
@@ -239,7 +243,7 @@ export default function Home() {
                   label="Credit Card Processing Fees:"
                   name="creditCardFees"
                   step="0.01"
-                  min={0}
+                  min="0"
                   placeholder="e.g., 0.03 for 3%"
                 />
                 <InputField
@@ -260,14 +264,14 @@ export default function Home() {
                   label="First Hire Discount:"
                   name="firstHireDiscount"
                   step="0.01"
-                  min={0}
+                  min="0"
                   placeholder="e.g., 0.1 for 10%"
                 />
                 <InputField
                   label="Installment Discount Factor:"
                   name="installmentDiscount"
                   step="0.01"
-                  min={0}
+                  min="0"
                   placeholder="e.g., 0.05 for 5%"
                 />
                 <InputField
@@ -288,8 +292,8 @@ export default function Home() {
                   label="Probability of Candidate Replacement:"
                   name="replacementProbability"
                   step="0.01"
-                  min={0}
-                  max={1}
+                  min="0"
+                  max="1"
                   placeholder="e.g., 0.1 for 10%"
                 />
               </Fieldset>

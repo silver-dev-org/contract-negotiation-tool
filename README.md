@@ -1,4 +1,4 @@
-# 📝 Contract Negotiation Tool for Silver.dev
+# 📝 Contract Negotiation Tool by Silver.dev
 
 ## Introduction
 

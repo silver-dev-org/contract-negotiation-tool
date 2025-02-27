@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import {
   FormEvent,
+  FormHTMLAttributes,
   InputHTMLAttributes,
   useCallback,
   useEffect,
@@ -148,16 +149,97 @@ function Navbar() {
   );
 }
 
+function ContractForm({ ...props }: FormHTMLAttributes<HTMLFormElement>) {
+  return (
+    <form id="form" className="space-y-4 mt-8" {...props}>
+      <div className="flex flex-col lg:flex-row lg:space-x-4">
+        <Fieldset legend="Fees">
+          <InputField
+            label="Base Fee per Successful Placement:"
+            name="baseFee"
+            step="0.01"
+            placeholder="e.g., 10000"
+          />
+          <InputField
+            label="Credit Card Processing Fees:"
+            name="creditCardFees"
+            step="0.01"
+            min="0"
+            placeholder="e.g., 0.03 for 3%"
+          />
+          <InputField
+            label="Retainer Fee:"
+            name="retainerFee"
+            step="0.01"
+            placeholder="e.g., 1500"
+          />
+          <InputField
+            label="Fee Reduction per Replacement:"
+            name="feeReduction"
+            step="0.01"
+            placeholder="e.g., 500"
+          />
+        </Fieldset>
+        <Fieldset legend="Financials">
+          <InputField
+            label="First Hire Discount:"
+            name="firstHireDiscount"
+            step="0.01"
+            min="0"
+            placeholder="e.g., 0.1 for 10%"
+          />
+          <InputField
+            label="Installment Discount Factor:"
+            name="installmentDiscount"
+            step="0.01"
+            min="0"
+            placeholder="e.g., 0.05 for 5%"
+          />
+          <InputField
+            label="Advance Payment Bonus:"
+            name="advancePaymentBonus"
+            step="0.01"
+            placeholder="e.g., 500"
+          />
+          <InputField
+            label="Guarantee Cost:"
+            name="guaranteeCost"
+            step="0.01"
+            placeholder="e.g., 2000"
+          />
+        </Fieldset>
+        <Fieldset legend="Special Terms">
+          <InputField
+            label="Probability of Candidate Replacement:"
+            name="replacementProbability"
+            step="0.01"
+            min="0"
+            max="1"
+            placeholder="e.g., 0.1 for 10%"
+          />
+        </Fieldset>
+      </div>
+      <button
+        type="submit"
+        className="w-full bg-primary text-primary-foreground font-semibold py-2 rounded-lg hover:bg-primary/90"
+      >
+        Share Model
+      </button>
+    </form>
+  );
+}
+
 export default function Home() {
-  const [shouldShowForm, setShouldShowForm] = useState<boolean>(false);
+  const [shouldContractShowForm, setShouldShowContractForm] =
+    useState<boolean>(false);
   const xs: number[] = [...Array(10).keys()].map((i) => i + 1);
   const [ys, setYs] = useState<number[]>([]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const shouldShowForm = params.toString().length === 0;
-    setShouldShowForm(shouldShowForm);
-    if (!shouldShowForm) {
+    const shouldContractShowForm = params.toString().length === 0;
+    setShouldShowContractForm(shouldContractShowForm);
+    if (!shouldContractShowForm) {
       const chartWasUpdated = updatePlacementsChart(params.entries().toArray());
       if (!chartWasUpdated) {
         alert("There are missing fields.");
@@ -217,7 +299,7 @@ export default function Home() {
       new FormData(form)
         .entries()
         .toArray()
-        .map((k, v) => [k.toString(), v.toString()])
+        .map(([k, v]) => [k.toString(), v.toString()])
     );
   }
 
@@ -229,83 +311,7 @@ export default function Home() {
           Contract Negotiation Tool
         </h1>
         <PlacementsChart xs={xs} ys={ys} />
-        {shouldShowForm && (
-          <form id="form" className="space-y-4 mt-8" onInput={onFormInput}>
-            <div className="flex flex-col lg:flex-row lg:space-x-4">
-              <Fieldset legend="Fees">
-                <InputField
-                  label="Base Fee per Successful Placement:"
-                  name="baseFee"
-                  step="0.01"
-                  placeholder="e.g., 10000"
-                />
-                <InputField
-                  label="Credit Card Processing Fees:"
-                  name="creditCardFees"
-                  step="0.01"
-                  min="0"
-                  placeholder="e.g., 0.03 for 3%"
-                />
-                <InputField
-                  label="Retainer Fee:"
-                  name="retainerFee"
-                  step="0.01"
-                  placeholder="e.g., 1500"
-                />
-                <InputField
-                  label="Fee Reduction per Replacement:"
-                  name="feeReduction"
-                  step="0.01"
-                  placeholder="e.g., 500"
-                />
-              </Fieldset>
-              <Fieldset legend="Financials">
-                <InputField
-                  label="First Hire Discount:"
-                  name="firstHireDiscount"
-                  step="0.01"
-                  min="0"
-                  placeholder="e.g., 0.1 for 10%"
-                />
-                <InputField
-                  label="Installment Discount Factor:"
-                  name="installmentDiscount"
-                  step="0.01"
-                  min="0"
-                  placeholder="e.g., 0.05 for 5%"
-                />
-                <InputField
-                  label="Advance Payment Bonus:"
-                  name="advancePaymentBonus"
-                  step="0.01"
-                  placeholder="e.g., 500"
-                />
-                <InputField
-                  label="Guarantee Cost:"
-                  name="guaranteeCost"
-                  step="0.01"
-                  placeholder="e.g., 2000"
-                />
-              </Fieldset>
-              <Fieldset legend="Special Terms">
-                <InputField
-                  label="Probability of Candidate Replacement:"
-                  name="replacementProbability"
-                  step="0.01"
-                  min="0"
-                  max="1"
-                  placeholder="e.g., 0.1 for 10%"
-                />
-              </Fieldset>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-primary text-primary-foreground font-semibold py-2 rounded-lg hover:bg-primary/90"
-            >
-              Share Model
-            </button>
-          </form>
-        )}
+        {shouldContractShowForm && <ContractForm onInput={onFormInput} />}
       </main>
     </>
   );

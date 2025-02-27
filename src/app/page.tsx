@@ -112,15 +112,17 @@ function Navbar() {
   return (
     <header className="py-4 px-6 border-b-gray-800 border-b-solid border-b-2 flex justify-center">
       <div className="container flex justify-between">
-        <Link
+        <a
           href="/"
           className="text-xl flex gap-2 items-center text-nowrap col-span-3"
         >
           📝 Silver Contracts
-        </Link>
+        </a>
         <div className="hidden md:flex items-center gap-4 justify-end">
-          <Link
+          <a
             href="https://github.com/nicopujia/silver-contracts"
+            title="Source code"
+            target="_blank"
             className="flex items-center"
           >
             <svg
@@ -141,7 +143,7 @@ function Navbar() {
 	C97.7,22,75.8,0,48.9,0z"
               />
             </svg>
-          </Link>
+          </a>
         </div>
       </div>
     </header>

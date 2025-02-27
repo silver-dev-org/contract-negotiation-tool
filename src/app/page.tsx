@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "chart.js";
 import Link from "next/link";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
 Chart.register(
@@ -145,63 +145,67 @@ function Navbar() {
 }
 
 export default function Home() {
-  const params = new URLSearchParams(window.location.search);
+  const [shouldShowForm, setShouldShowForm] = useState<boolean>(false);
   const xs: number[] = [...Array(10).keys()].map((i) => i + 1);
   const [ys, setYs] = useState<number[]>([]);
 
   useEffect(() => {
-    if (params.toString()) {
-      const wasUpdated = updatePlacementsChart(params.entries().toArray());
-      if (!wasUpdated) {
+    const params = new URLSearchParams(window.location.search);
+    const shouldShowForm = params.toString().length === 0;
+    setShouldShowForm(shouldShowForm);
+    if (!shouldShowForm) {
+      const chartWasUpdated = updatePlacementsChart(params.entries().toArray());
+      if (!chartWasUpdated) {
         alert("There are missing fields.");
       }
     }
   }, []);
 
-  function updatePlacementsChart(entries: [string, string][]): boolean {
+  const updatePlacementsChart = useCallback(
+    (entries: [string, string][]): boolean => {
     const data = Object.fromEntries(entries);
     if (
-      data.baseFee === undefined ||
-      data.firstHireDiscount === undefined ||
-      data.retainerFee === undefined ||
-      data.guaranteeCost === undefined ||
-      data.installmentDiscount === undefined ||
-      data.advancePaymentBonus === undefined ||
-      data.creditCardFees === undefined ||
-      data.replacementProbability === undefined ||
-      data.feeReduction === undefined
+        !data.baseFee ||
+        !data.firstHireDiscount ||
+        !data.retainerFee ||
+        !data.guaranteeCost ||
+        !data.installmentDiscount ||
+        !data.advancePaymentBonus ||
+        !data.creditCardFees ||
+        !data.replacementProbability ||
+        !data.feeReduction
     ) {
       return false;
     }
     setYs(
       xs.map((placements) => {
-        const baseFee = parseFloat(data.baseFee.toString());
-        const firstHireDiscount = parseFloat(data.firstHireDiscount.toString());
-        const retainerFee = parseFloat(data.retainerFee.toString());
-        const guaranteeCost = parseFloat(data.guaranteeCost.toString());
-        const installmentDiscount = parseFloat(
-          data.installmentDiscount.toString()
-        );
-        const advancePaymentBonus = parseFloat(
-          data.advancePaymentBonus.toString()
-        );
-        const creditCardFees = parseFloat(data.creditCardFees.toString());
+          const baseFee = parseFloat(data.baseFee);
+          const firstHireDiscount = parseFloat(data.firstHireDiscount);
+          const retainerFee = parseFloat(data.retainerFee);
+          const guaranteeCost = parseFloat(data.guaranteeCost);
+          const installmentDiscount = parseFloat(data.installmentDiscount);
+          const advancePaymentBonus = parseFloat(data.advancePaymentBonus);
+          const creditCardFees = parseFloat(data.creditCardFees);
         const replacementProbability = parseFloat(
-          data.replacementProbability.toString()
+            data.replacementProbability
         );
-        const feeReduction = parseFloat(data.feeReduction.toString());
+          const feeReduction = parseFloat(data.feeReduction);
+
         let value =
           placements * baseFee * (1 - firstHireDiscount) +
           retainerFee -
           replacementProbability * feeReduction -
           guaranteeCost +
           advancePaymentBonus;
+
         value = value - installmentDiscount * value - creditCardFees * value;
         return Math.round(value);
       })
     );
     return true;
-  }
+    },
+    [xs]
+  );
 
   function onFormInput(event: FormEvent) {
     const form = event.currentTarget as HTMLFormElement;
@@ -221,7 +225,7 @@ export default function Home() {
           Contract Negotiation Tool
         </h1>
         <PlacementsChart xs={xs} ys={ys}></PlacementsChart>
-        {!params.toString() && (
+        {shouldShowForm && (
           <form id="form" className="space-y-4 mt-8" onInput={onFormInput}>
             <div className="flex flex-col lg:flex-row lg:space-x-4">
               <Fieldset legend="Fees">

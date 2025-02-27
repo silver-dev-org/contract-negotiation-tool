@@ -47,6 +47,9 @@ export function PlacementsChart({ coords }: { coords: [number, number][] }) {
           },
         },
         plugins: {
+          legend: {
+            onClick: () => {},
+          },
           tooltip: {
             callbacks: {
               title: (tooltipItems) => `${tooltipItems[0].label} placements`,

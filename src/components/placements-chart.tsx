@@ -25,15 +25,24 @@ export function PlacementsChart({ coords }: { coords: [number, number][] }) {
     <Line
       options={{
         responsive: true,
+
         interaction: {
           mode: "index",
           intersect: false,
         },
         scales: {
           x: {
+            grid: {
+              color: "#4d4d4d",
+            },
             title: {
               display: true,
               text: "Placements",
+            },
+          },
+          y: {
+            grid: {
+              color: "#4d4d4d",
             },
           },
         },

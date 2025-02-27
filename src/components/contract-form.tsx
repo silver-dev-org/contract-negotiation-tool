@@ -78,6 +78,14 @@ export function ContractForm({
             max="1"
             placeholder="e.g., 0.1 for 10%"
           />
+          <InputField
+            label="Maximum Expected Placements"
+            name="h"
+            min="1"
+            step="1"
+            placeholder="e.g., 10"
+            defaultValue="10"
+          />
         </Fieldset>
       </div>
       <button

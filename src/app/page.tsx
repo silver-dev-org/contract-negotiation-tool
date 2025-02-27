@@ -1,11 +1,11 @@
 "use client";
 import { ContractForm, Navbar, PlacementsChart } from "@/components";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 export default function Home() {
   const [shouldContractShowForm, setShouldShowContractForm] =
     useState<boolean>(false);
-  const xs: number[] = [...Array(10).keys()].map((i) => i + 1);
+  const [xs, setXs] = useState<number[]>([]);
   const [ys, setYs] = useState<number[]>([]);
   const [clientName, setClientName] = useState("");
 
@@ -15,58 +15,58 @@ export default function Home() {
     setShouldShowContractForm(shouldContractShowForm);
     if (!shouldContractShowForm) {
       setClientName(params.get("c") ?? "your company");
-      const chartWasUpdated = calculatePrices(params.entries().toArray());
-      if (!chartWasUpdated) {
+      const couldCalculate = calculatePrices(params.entries().toArray());
+      if (!couldCalculate) {
         alert("There are missing fields.");
       }
     }
   }, []);
 
-  const calculatePrices = useCallback(
-    (entries: [string, string][]): boolean => {
-      const data = Object.fromEntries(entries);
-      if (
-        !data.b ||
-        !data.d ||
-        !data.r ||
-        !data.g ||
-        !data.i ||
-        !data.a ||
-        !data.cc ||
-        !data.p ||
-        !data.f
-      ) {
-        return false;
-      }
-      setYs(
-        xs.map((placements) => {
-          const baseFeePerPlacement = parseFloat(data.b);
-          const firstHireDiscount = parseFloat(data.d);
-          const retainerFee = parseFloat(data.r);
-          const guaranteeCost = parseFloat(data.g);
-          const installmentDiscount = parseFloat(data.i);
-          const advancePaymentBonus = parseFloat(data.a);
-          const creditCardFees = parseFloat(data.cc);
-          const replacementProbability = parseFloat(data.p);
-          const feeReductionPerReplacement = parseFloat(data.f);
+  function calculatePrices(entries: [string, string][]): boolean {
+    const data = Object.fromEntries(entries);
+    if (
+      !data.h ||
+      !data.b ||
+      !data.d ||
+      !data.r ||
+      !data.g ||
+      !data.i ||
+      !data.a ||
+      !data.cc ||
+      !data.p ||
+      !data.f
+    ) {
+      return false;
+    }
+    const xs = [...Array(parseInt(data.h)).keys()].map((i) => i + 1);
+    setXs(xs);
+    setYs(
+      xs.map((placements) => {
+        const baseFeePerPlacement = parseFloat(data.b);
+        const firstHireDiscount = parseFloat(data.d);
+        const retainerFee = parseFloat(data.r);
+        const guaranteeCost = parseFloat(data.g);
+        const installmentDiscount = parseFloat(data.i);
+        const advancePaymentBonus = parseFloat(data.a);
+        const creditCardFees = parseFloat(data.cc);
+        const replacementProbability = parseFloat(data.p);
+        const feeReductionPerReplacement = parseFloat(data.f);
 
-          let value =
-            placements * baseFeePerPlacement * (1 - firstHireDiscount) +
-            advancePaymentBonus +
-            retainerFee -
-            guaranteeCost -
-            replacementProbability *
-              baseFeePerPlacement *
-              feeReductionPerReplacement;
-          value -= installmentDiscount * value;
-          value -= creditCardFees * value;
-          return Math.round(value);
-        })
-      );
-      return true;
-    },
-    [xs]
-  );
+        let value =
+          placements * baseFeePerPlacement * (1 - firstHireDiscount) +
+          advancePaymentBonus +
+          retainerFee -
+          guaranteeCost -
+          replacementProbability *
+            baseFeePerPlacement *
+            feeReductionPerReplacement;
+        value -= installmentDiscount * value;
+        value -= creditCardFees * value;
+        return Math.round(value);
+      })
+    );
+    return true;
+  }
 
   function onFormInput(event: FormEvent) {
     const form = event.currentTarget as HTMLFormElement;

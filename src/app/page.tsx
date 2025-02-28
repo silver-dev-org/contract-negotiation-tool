@@ -27,19 +27,11 @@ function MainContentFallback() {
 function MainContent() {
   const [coords, setCoords] = useState<[number, number][]>([]);
   const params = useSearchParams();
-  const shouldContractShowForm = params.toString().length === 0;
   const clientName = params.get("c") ?? "your company";
 
-  useEffect(() => {
-    if (!shouldContractShowForm) {
-      const couldCalculate = calculateCoords(params.entries().toArray());
-      if (!couldCalculate) {
-        alert("There are missing fields.");
-      }
-    }
-  }, []);
+  useEffect(() => calculateCoords(params.entries().toArray()), []);
 
-  function calculateCoords(entries: [string, string][]): boolean {
+  function calculateCoords(entries: [string, string][]) {
     const data = Object.fromEntries(entries);
     if (
       !data.h ||
@@ -53,7 +45,7 @@ function MainContent() {
       !data.p ||
       !data.f
     ) {
-      return false;
+      return;
     }
     setCoords(
       [...Array(parseInt(data.h)).keys()].map((i) => {
@@ -81,7 +73,6 @@ function MainContent() {
         return [placements, price];
       })
     );
-    return true;
   }
 
   function onFormInput(event: FormEvent) {
@@ -97,12 +88,12 @@ function MainContent() {
   return (
     <>
       <h1 className="text-5xl text-center font-bold mb-4 text-foreground">
-        {shouldContractShowForm
+        {!params.toString()
           ? "Contract Negotiation Tool"
           : `Contract offers for ${clientName}`}
       </h1>
       <PlacementsChart coords={coords} />
-      {shouldContractShowForm && <ContractForm onInput={onFormInput} />}
+      <ContractForm onInput={onFormInput} />
     </>
   );
 }

@@ -1,8 +1,10 @@
+import { useSearchParams } from "next/navigation";
 import { FormHTMLAttributes, InputHTMLAttributes } from "react";
 
 export function ContractForm({
   ...props
 }: FormHTMLAttributes<HTMLFormElement>) {
+  const data = Object.fromEntries(useSearchParams().entries());
   return (
     <form id="form" className="space-y-4" {...props}>
       <div className="flex flex-col lg:flex-row lg:space-x-4 mb-4">
@@ -12,6 +14,7 @@ export function ContractForm({
             name="b"
             step="0.01"
             placeholder="e.g., 10000 for $10,000"
+            defaultValue={data.b}
           />
           <InputField
             label="Credit Card Processing Fees:"
@@ -19,12 +22,14 @@ export function ContractForm({
             step="0.01"
             min="0"
             placeholder="e.g., 0.03 for 3%"
+            defaultValue={data.cc}
           />
           <InputField
             label="Retainer Fee:"
             name="r"
             step="0.01"
             placeholder="e.g., 1500 for $1,500"
+            defaultValue={data.r}
           />
           <InputField
             label="Fee Reduction per Replacement:"
@@ -33,6 +38,7 @@ export function ContractForm({
             min="0"
             max="1"
             placeholder="e.g., 0.5 for 50%"
+            defaultValue={data.f}
           />
         </Fieldset>
         <Fieldset legend="Financials">
@@ -42,6 +48,7 @@ export function ContractForm({
             step="0.01"
             min="0"
             placeholder="e.g., 0.1 for 10%"
+            defaultValue={data.d}
           />
           <InputField
             label="Installment Discount:"
@@ -49,18 +56,21 @@ export function ContractForm({
             step="0.01"
             min="0"
             placeholder="e.g., 0.05 for 5%"
+            defaultValue={data.i}
           />
           <InputField
             label="Advance Payment Bonus:"
             name="a"
             step="0.01"
             placeholder="e.g., 500 for $500"
+            defaultValue={data.a}
           />
           <InputField
             label="Guarantee Cost:"
             name="g"
             step="0.01"
             placeholder="e.g., 2000 for $2,000"
+            defaultValue={data.g}
           />
         </Fieldset>
         <Fieldset legend="Special Terms">
@@ -69,6 +79,7 @@ export function ContractForm({
             name="c"
             placeholder="e.g., Ramp"
             type="text"
+            defaultValue={data.c}
           />
           <InputField
             label="Probability of Candidate Replacement:"
@@ -77,6 +88,7 @@ export function ContractForm({
             min="0"
             max="1"
             placeholder="e.g., 0.1 for 10%"
+            defaultValue={data.p}
           />
           <InputField
             label="Maximum Expected Placements"
@@ -84,7 +96,7 @@ export function ContractForm({
             min="1"
             step="1"
             placeholder="e.g., 10"
-            defaultValue="10"
+            defaultValue={data.h}
           />
         </Fieldset>
       </div>

@@ -1,9 +1,7 @@
 import { useSearchParams } from "next/navigation";
 import { FormHTMLAttributes, InputHTMLAttributes } from "react";
 
-export function ContractForm({
-  ...props
-}: FormHTMLAttributes<HTMLFormElement>) {
+export function Form({ ...props }: FormHTMLAttributes<HTMLFormElement>) {
   const data = Object.fromEntries(useSearchParams().entries());
   return (
     <form id="form" className="space-y-4" {...props}>

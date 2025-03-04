@@ -1,6 +1,6 @@
 import {
   CategoryScale,
-  Chart,
+  Chart as ChartJS,
   Legend,
   LinearScale,
   LineElement,
@@ -10,7 +10,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-Chart.register(
+ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
@@ -20,7 +20,7 @@ Chart.register(
   Legend
 );
 
-export function PlacementsChart({ coords }: { coords: [number, number][] }) {
+export function Chart({ coords }: { coords: [number, number][] }) {
   return (
     <Line
       options={{

@@ -1,5 +1,5 @@
 "use client";
-import { ContractForm, Navbar, PlacementsChart } from "@/components";
+import { Chart, Form, Navbar } from "@/components";
 import { useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useEffect, useState } from "react";
 
@@ -92,8 +92,8 @@ function MainContent() {
           ? "Contract Negotiation Tool"
           : `Contract offers for ${clientName}`}
       </h1>
-      <PlacementsChart coords={coords} />
-      <ContractForm onInput={onFormInput} />
+      <Chart coords={coords} />
+      <Form onInput={onFormInput} />
     </>
   );
 }

@@ -1,3 +1,3 @@
-export * from "./contract-form";
+export * from "./chart";
+export * from "./form";
 export * from "./navbar";
-export * from "./placements-chart";

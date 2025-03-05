@@ -19,10 +19,7 @@ export function Form({
   }, [n, f]);
 
   return (
-    <form
-      className="bg-background-highlighted rounded p-4 shadow-md"
-      onSubmit={(e) => e.preventDefault()}
-    >
+    <form className="p-4" onSubmit={(e) => e.preventDefault()}>
       <div className="gap-3 grid grid-cols-2 sm:grid-cols-3">
         <div className="flex flex-col">
           <label className="me-2" htmlFor="n">
@@ -72,23 +69,13 @@ export function Form({
           </div>
         </fieldset>
       </div>
-      <button
-        className="uppercase border rounded w-full bg-primary hover:bg-primary/90 text-white border-white font-semibold p-2 mt-4 disabled:text-background-highlighted disabled:bg-foreground-diminished"
-        type="button"
-        onClick={(event) => {
-          window.navigator.clipboard.writeText(window.location.hostname);
-          const button = event.target as HTMLButtonElement;
-          const originalText = button.innerText;
-          button.innerText = "Copied!";
-          button.disabled = true;
-          setTimeout(() => {
-            button.innerText = originalText;
-            button.disabled = false;
-          }, 2000);
-        }}
+      <a
+        className="block text-center uppercase border rounded bg-primary hover:bg-primary/90 text-white border-white font-semibold p-2 mt-4 disabled:bg-neutral-500 disabled:bg-foreground-diminished"
+        href="mailto:gabriel@silver.dev?subject=Email Subject&body=Contents of email"
+        role="button"
       >
         Share
-      </button>
+      </a>
     </form>
   );
 }

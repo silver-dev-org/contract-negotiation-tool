@@ -52,18 +52,17 @@ function MainContent() {
         <div>
           <Form
             onValuesChange={(data) => {
-              setExpectedContractValue(calculateContractValue(data));
               const xs = [];
               const ys = [];
-              const numberOfPlacements = data.numberOfPlacements;
-              for (let x = 0; x <= numberOfPlacements; x++) {
-                data.numberOfPlacements = x;
-                const y = calculateContractValue(data);
+              for (let x = 0; x <= data.numberOfPlacements; x++) {
                 xs.push(x);
-                ys.push(y);
+                ys.push(
+                  calculateContractValue({ ...data, numberOfPlacements: x })
+                );
               }
               setXValues(xs);
               setYValues(ys);
+              setExpectedContractValue(calculateContractValue(data));
             }}
           />
         </div>

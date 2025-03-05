@@ -1,5 +1,5 @@
 import { ContractProps } from "@/app/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 
 export function Form({
@@ -8,26 +8,20 @@ export function Form({
   onValuesChange?: (data: ContractProps) => void;
 }) {
   const [f, setF] = useState<number>();
+  const [n, setN] = useState<number>();
+
+  useEffect(() => {
+    if (!n || n < 1 || !f || !onValuesChange) return;
+    onValuesChange({
+      numberOfPlacements: n,
+      basePlacementFee: f,
+    });
+  }, [n, f]);
 
   return (
     <form
       className="bg-background-highlighted rounded p-4 shadow-md"
       onSubmit={(e) => e.preventDefault()}
-      onInput={(event) => {
-        const rawData = new FormData(event.currentTarget);
-        const n = rawData.get("n")?.toString();
-        if (!n || !f || !onValuesChange) {
-          return;
-        }
-        const data: ContractProps = {
-          numberOfPlacements: parseInt(n),
-          basePlacementFee: f,
-        };
-        if (data.numberOfPlacements < 1) {
-          return;
-        }
-        onValuesChange(data);
-      }}
     >
       <div className="gap-3 grid grid-cols-2 sm:grid-cols-3">
         <div className="flex flex-col">
@@ -42,6 +36,7 @@ export function Form({
             placeholder="Enter a number"
             min={1}
             max={100}
+            onChange={(e) => setN(parseInt(e.target.value) || undefined)}
           />
         </div>
         <div className="flex flex-col">

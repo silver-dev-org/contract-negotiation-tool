@@ -36,7 +36,6 @@ function MainContent() {
       </h1>
       <div className="flex gap-2 flex-col xl:flex-row">
         <div className="flex-grow">
-          <Chart xValues={xValues} yValues={yValues} />
           {expectedContractValue && (
             <p className="text-3xl mt-4 mb-6">
               Expected contract value:{" "}
@@ -48,8 +47,9 @@ function MainContent() {
               </span>
             </p>
           )}
+          <Chart xValues={xValues} yValues={yValues} />
         </div>
-        <div>
+        <div className="order-first">
           <Form
             onValuesChange={(data) => {
               const xs = [];

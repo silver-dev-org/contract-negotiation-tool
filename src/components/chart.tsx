@@ -29,7 +29,7 @@ export function Chart({
 }) {
   return (
     <Line
-      className="p-4 bg-background-highlighted rounded"
+      className="p-4 bg-background-highlighted rounded shadow-md"
       options={{
         responsive: true,
 

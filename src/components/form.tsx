@@ -11,7 +11,7 @@ export function Form({
 
   return (
     <form
-      className="bg-background-highlighted rounded p-4"
+      className="bg-background-highlighted rounded p-4 shadow-md"
       onSubmit={(e) => e.preventDefault()}
       onInput={(event) => {
         const rawData = new FormData(event.currentTarget);

@@ -42,8 +42,8 @@ function MainContent() {
             onValuesChange={(data) => {
               const xs = [];
               const ys = [];
-              const placements = data.numberOfPlacements;
-              for (let x = 0; x <= placements; x++) {
+              const numberOfPlacements = data.numberOfPlacements;
+              for (let x = 0; x <= numberOfPlacements; x++) {
                 data.numberOfPlacements = x;
                 const y = calculateContractValue(data);
                 xs.push(x);

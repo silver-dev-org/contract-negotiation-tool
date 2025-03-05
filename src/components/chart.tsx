@@ -45,6 +45,10 @@ export function Chart({
             title: {
               display: true,
               text: "Placements",
+              color: "white",
+            },
+            ticks: {
+              color: "white",
             },
           },
           y: {
@@ -52,6 +56,7 @@ export function Chart({
               color: "#4d4d4d",
             },
             ticks: {
+              color: "white",
               callback: (value) => {
                 return new Intl.NumberFormat("en-US", {
                   style: "currency",
@@ -62,6 +67,7 @@ export function Chart({
             title: {
               display: true,
               text: "Fees",
+              color: "white",
             },
           },
         },

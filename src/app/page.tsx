@@ -1,55 +1,29 @@
 "use client";
-import { Chart, Footer, Form } from "@/components";
-import { Suspense, useState } from "react";
+
+import Image from "next/image";
+import SilverLogoWhite from "../../public/silver-logo-white.svg";
+
+import { Chart, Form } from "@/components";
+import { useState } from "react";
 import { calculateContractValue } from "./utils";
 
 export default function Page() {
-  return (
-    <div className="flex flex-col h-screen">
-      <main className="p-4 flex-grow">
-        <Suspense fallback={<MainContentFallback />}>
-          <MainContent />
-        </Suspense>
-      </main>
-      <Footer />
-    </div>
-  );
-}
-
-function MainContentFallback() {
-  return (
-    <h1 className="text-5xl text-center font-bold mb-4 text-foreground">
-      Loading...
-    </h1>
-  );
-}
-
-function MainContent() {
   const [xValues, setXValues] = useState<number[]>([]);
   const [yValues, setYValues] = useState<number[]>([]);
   const [expectedContractValue, setExpectedContractValue] = useState<number>();
 
   return (
-    <>
-      <h1 className="text-2xl sm:text-4xl text-center font-bold mb-4 text-foreground p-4 font-serif">
-        Contract Negotiation Tool
-      </h1>
-      <div className="flex gap-2 flex-col xl:flex-row">
-        <div className="flex-grow">
-          {expectedContractValue && (
-            <p className="text-3xl mt-4 mb-6">
-              Expected contract value:{" "}
-              <span className="text-primary font-serif font-extralight">
-                {new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                }).format(expectedContractValue)}
-              </span>
-            </p>
-          )}
-          <Chart xValues={xValues} yValues={yValues} />
-        </div>
-        <div className="order-first">
+    <div className="flex flex-col xl:gap-24">
+      <header className="text-foreground font-serif flex justify-between container mx-auto items-center p-4">
+        <a href="https://silver.dev" target="_blank">
+          <Image width={200} src={SilverLogoWhite} alt="Silver.dev" />
+        </a>
+        <h1 className="text-xl sm:text-2xl font-bold">
+          Contract Negotiation Tool
+        </h1>
+      </header>
+      <div className="flex flex-col xl:flex-row gap-8 container mx-auto p-8">
+        <div className="xl:w-1/2 xl:flex xl:justify-end">
           <Form
             onValuesChange={(data) => {
               const xs = [];
@@ -66,7 +40,21 @@ function MainContent() {
             }}
           />
         </div>
+        <dl className="font-serif flex flex-col justify-center xl:w-1/2">
+          <dt className="text-lg italic mb-4">Expected contract value: </dt>
+          <dd className="text-primary font-extralight text-8xl">
+            {expectedContractValue
+              ? new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(expectedContractValue)
+              : "-"}
+          </dd>
+        </dl>
       </div>
-    </>
+      <div className="container mx-auto">
+        <Chart xValues={xValues} yValues={yValues} />
+      </div>
+    </div>
   );
 }

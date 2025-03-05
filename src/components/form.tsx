@@ -19,8 +19,8 @@ export function Form({
   }, [n, f]);
 
   return (
-    <form className="p-4" onSubmit={(e) => e.preventDefault()}>
-      <div className="gap-3 grid grid-cols-2 sm:grid-cols-3">
+    <form onSubmit={(e) => e.preventDefault()}>
+      <div className="gap-3 grid grid-cols-1 sm:grid-cols-2">
         <div className="flex flex-col">
           <label className="me-2" htmlFor="n">
             Number of placements:

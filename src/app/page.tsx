@@ -27,19 +27,32 @@ function MainContentFallback() {
 function MainContent() {
   const [xValues, setXValues] = useState<number[]>([]);
   const [yValues, setYValues] = useState<number[]>([]);
+  const [expectedContractValue, setExpectedContractValue] = useState<number>();
 
   return (
     <>
-      <h1 className="text-2xl sm:text-4xl text-center font-bold mb-4 text-foreground p-4">
+      <h1 className="text-2xl sm:text-4xl text-center font-bold mb-4 text-foreground p-4 font-serif">
         Contract Negotiation Tool
       </h1>
       <div className="flex gap-2 flex-col xl:flex-row">
         <div className="flex-grow">
           <Chart xValues={xValues} yValues={yValues} />
+          {expectedContractValue && (
+            <p className="text-3xl mt-4 mb-6">
+              Expected contract value:{" "}
+              <span className="text-primary font-serif font-extralight">
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(expectedContractValue)}
+              </span>
+            </p>
+          )}
         </div>
         <div>
           <Form
             onValuesChange={(data) => {
+              setExpectedContractValue(calculateContractValue(data));
               const xs = [];
               const ys = [];
               const numberOfPlacements = data.numberOfPlacements;

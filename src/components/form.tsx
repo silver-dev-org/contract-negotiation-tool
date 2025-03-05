@@ -74,7 +74,7 @@ export function Form({
         href="mailto:gabriel@silver.dev?subject=Email Subject&body=Contents of email"
         role="button"
       >
-        Share
+        Share with Gabriel
       </a>
     </form>
   );

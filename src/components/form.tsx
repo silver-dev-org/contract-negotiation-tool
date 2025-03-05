@@ -1,150 +1,99 @@
-import { useSearchParams } from "next/navigation";
-import { FormHTMLAttributes, InputHTMLAttributes } from "react";
+import { ContractProps } from "@/app/utils";
+import { useState } from "react";
+import CurrencyInput from "react-currency-input-field";
 
-export function Form({ ...props }: FormHTMLAttributes<HTMLFormElement>) {
-  const data = Object.fromEntries(useSearchParams().entries());
+export function Form({
+  onValuesChange: onValuesChange,
+}: {
+  onValuesChange?: (data: ContractProps) => void;
+}) {
+  const [f, setF] = useState<number>();
+
   return (
-    <form id="form" className="space-y-4" {...props}>
-      <div className="flex flex-col lg:flex-row lg:space-x-4 mb-4">
-        <Fieldset legend="Fees">
-          <InputField
-            label="Base Fee per Successful Placement:"
-            name="b"
-            step="0.01"
-            placeholder="e.g., 10000 for $10,000"
-            defaultValue={data.b}
+    <form
+      className="bg-background-highlighted rounded p-4"
+      onSubmit={(e) => e.preventDefault()}
+      onInput={(event) => {
+        const rawData = new FormData(event.currentTarget);
+        const n = rawData.get("n")?.toString();
+        if (!n || !f || !onValuesChange) {
+          return;
+        }
+        const data: ContractProps = {
+          numberOfPlacements: parseInt(n),
+          basePlacementFee: f,
+        };
+        if (data.numberOfPlacements < 1) {
+          return;
+        }
+        onValuesChange(data);
+      }}
+    >
+      <div className="gap-3 grid grid-cols-2 sm:grid-cols-3">
+        <div className="flex flex-col">
+          <label className="me-2" htmlFor="n">
+            Number of placements:
+          </label>
+          <input
+            className="border rounded bg-transparent text-foreground p-2"
+            type="number"
+            id="n"
+            name="n"
+            placeholder="Enter a number"
+            min={1}
+            max={100}
           />
-          <InputField
-            label="Credit Card Processing Fees:"
-            name="cc"
-            step="0.01"
-            min="0"
-            placeholder="e.g., 0.03 for 3%"
-            defaultValue={data.cc}
-          />
-          <InputField
-            label="Retainer Fee:"
-            name="r"
-            step="0.01"
-            placeholder="e.g., 1500 for $1,500"
-            defaultValue={data.r}
-          />
-          <InputField
-            label="Fee Reduction per Replacement:"
+        </div>
+        <div className="flex flex-col">
+          <label className="me-2" htmlFor="f">
+            Base placement fee:
+          </label>
+          <CurrencyInput
+            className="border rounded bg-transparent text-foreground p-2"
+            id="f"
             name="f"
-            step="0.01"
-            min="0"
-            max="1"
-            placeholder="e.g., 0.5 for 50%"
-            defaultValue={data.f}
+            placeholder="Enter a number"
+            decimalsLimit={2}
+            prefix="$"
+            onValueChange={(value, name, values) => {
+              if (!values) return;
+              if (!values.float) return;
+              setF(values.float);
+            }}
           />
-        </Fieldset>
-        <Fieldset legend="Financials">
-          <InputField
-            label="First Hire Discount:"
-            name="d"
-            step="0.01"
-            min="0"
-            placeholder="e.g., 0.1 for 10%"
-            defaultValue={data.d}
-          />
-          <InputField
-            label="Installment Discount:"
-            name="i"
-            step="0.01"
-            min="0"
-            placeholder="e.g., 0.05 for 5%"
-            defaultValue={data.i}
-          />
-          <InputField
-            label="Advance Payment Bonus:"
-            name="a"
-            step="0.01"
-            placeholder="e.g., 500 for $500"
-            defaultValue={data.a}
-          />
-          <InputField
-            label="Guarantee Cost:"
-            name="g"
-            step="0.01"
-            placeholder="e.g., 2000 for $2,000"
-            defaultValue={data.g}
-          />
-        </Fieldset>
-        <Fieldset legend="Special Terms">
-          <InputField
-            label="Client name"
-            name="c"
-            placeholder="e.g., Ramp"
-            type="text"
-            defaultValue={data.c}
-          />
-          <InputField
-            label="Probability of Candidate Replacement:"
-            name="p"
-            step="0.01"
-            min="0"
-            max="1"
-            placeholder="e.g., 0.1 for 10%"
-            defaultValue={data.p}
-          />
-          <InputField
-            label="Maximum Expected Placements"
-            name="h"
-            min="1"
-            step="1"
-            placeholder="e.g., 10"
-            defaultValue={data.h}
-          />
-        </Fieldset>
+        </div>
+        <fieldset className="p-2 border flex flex-col rounded">
+          <legend>Payment method</legend>
+          <div>
+            <input
+              className="border rounded bg-transparent text-foreground"
+              type="checkbox"
+              id="cc"
+              name="cc"
+            />
+            <label className="ms-2" htmlFor="cc">
+              Credit card
+            </label>
+          </div>
+        </fieldset>
       </div>
       <button
-        type="submit"
-        className="w-full bg-primary text-white uppercase border border-white font-semibold py-2 rounded-sm hover:bg-primary/90"
+        className="uppercase border rounded w-full bg-primary hover:bg-primary/90 text-white border-white font-semibold p-2 mt-4 disabled:text-background-highlighted disabled:bg-foreground-diminished"
+        type="button"
+        onClick={(event) => {
+          window.navigator.clipboard.writeText(window.location.hostname);
+          const button = event.target as HTMLButtonElement;
+          const originalText = button.innerText;
+          button.innerText = "Copied!";
+          button.disabled = true;
+          setTimeout(() => {
+            button.innerText = originalText;
+            button.disabled = false;
+          }, 2000);
+        }}
       >
-        Share Model
+        Share
       </button>
     </form>
-  );
-}
-
-function InputField({
-  label,
-  name,
-  type = "number",
-  ...props
-}: {
-  label: string;
-  name: string;
-  type?: string;
-} & InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <div className="flex flex-col">
-      <label htmlFor={name} className="font-medium">
-        {label}
-      </label>
-      <input
-        type={type}
-        name={name}
-        className="border bg-transparent rounded-lg p-2 focus:outline-none focus:ring focus:ring-primary"
-        required
-        {...props}
-      />
-    </div>
-  );
-}
-
-function Fieldset({
-  legend,
-  children,
-}: {
-  legend: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <fieldset className="flex-grow mt-8">
-      <legend className="text-xl font-semibold">{legend}</legend>
-      <div className="space-y-2 mt-2">{children}</div>
-    </fieldset>
   );
 }

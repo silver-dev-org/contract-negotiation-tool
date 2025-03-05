@@ -20,9 +20,16 @@ ChartJS.register(
   Legend
 );
 
-export function Chart({ coords }: { coords: [number, number][] }) {
+export function Chart({
+  xValues,
+  yValues,
+}: {
+  xValues: number[];
+  yValues: number[];
+}) {
   return (
     <Line
+      className="p-4 bg-background-highlighted rounded"
       options={{
         responsive: true,
 
@@ -44,6 +51,18 @@ export function Chart({ coords }: { coords: [number, number][] }) {
             grid: {
               color: "#4d4d4d",
             },
+            ticks: {
+              callback: (value) => {
+                return new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(value as number);
+              },
+            },
+            title: {
+              display: true,
+              text: "Fees",
+            },
           },
         },
         plugins: {
@@ -58,13 +77,13 @@ export function Chart({ coords }: { coords: [number, number][] }) {
         },
       }}
       data={{
-        labels: coords.map((coord) => coord[0]),
+        labels: xValues,
         datasets: [
           {
-            label: "Price",
+            label: "Fee",
             pointBackgroundColor: "white",
             borderColor: "#fa4529",
-            data: coords.map((coord) => coord[1]),
+            data: yValues,
           },
         ],
       }}

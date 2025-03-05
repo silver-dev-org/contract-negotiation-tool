@@ -12,6 +12,8 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         primary: "#fa4529",
+        "background-highlighted": "var(--background-highlighted)",
+        "foreground-diminished": "var(--foreground-diminished)",
       },
     },
   },

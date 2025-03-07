@@ -38,7 +38,7 @@ export default function Page() {
             }}
           />
         </Suspense>
-        <div className="flex flex-col gap-4 flex-grow">
+        <div className="flex flex-col gap-4 flex-grow xl:w-1/2">
           <dl className="font-serif flex flex-col justify-center">
             <dt className="text-lg italic mb-4">Expected contract value: </dt>
             <dd className="text-primary font-extralight text-6xl sm:text-8xl">

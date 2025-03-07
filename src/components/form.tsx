@@ -83,7 +83,7 @@ export function Form({
       </div>
       <button
         type="button"
-        className="w-full text-center uppercase border rounded bg-primary hover:bg-primary/90 text-white border-white font-semibold p-2 mt-4"
+        className="w-full text-center uppercase border rounded bg-primary hover:bg-primary/90 text-white border-white font-semibold p-2"
         onClick={() => {
           const queryString = Object.entries(formState)
             .filter(([key, value]) => value)

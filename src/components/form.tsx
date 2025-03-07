@@ -44,19 +44,41 @@ export function Form({
           <strong className="text-4xl ">{formState.f}%</strong>
         </section>
         <div className="flex flex-col gap-4">
-          <NumericInput
-            id="n"
-            defaultValue={formState.n}
-            onInput={updateFormStateValue}
-            label="Number of placements"
-          />
-          <NumericInput
-            id="s"
-            defaultValue={formState.s}
-            onInput={updateFormStateValue}
-            label="Expected Average Salary"
-            type="money"
-          />
+          <div className="flex flex-col">
+            <label className="me-2 text-lg" htmlFor="numberOfPlacementsInput">
+              Number of placements:
+            </label>
+            <input
+              className="border rounded bg-transparent text-foreground p-2 border-neutral-500"
+              id="numberOfPlacementsInput"
+              type="number"
+              placeholder="Enter a number"
+              min={1}
+              step={1}
+              defaultValue={formState.n}
+              onInput={(e) => updateFormStateValue("n", e.currentTarget.value)}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label
+              className="me-2 text-lg"
+              htmlFor="expectedAverageSalaryInput"
+            >
+              Expected Average Salary:
+            </label>
+            <CurrencyInput
+              className="border rounded bg-transparent text-foreground p-2 border-neutral-500"
+              id="expectedAverageSalaryInput"
+              placeholder="Enter a number"
+              prefix="$"
+              decimalsLimit={2}
+              allowNegativeValue={false}
+              defaultValue={formState.s}
+              onValueChange={(value, _, values) =>
+                updateFormStateValue("s", values?.float || 0)
+              }
+            />
+          </div>
         </div>
         {[
           ["x", "Exclusivity", "Each role is handled by only one agency."],
@@ -68,11 +90,11 @@ export function Form({
             <label
               className="flex flex-col border rounded p-2 border-neutral-500 cursor-pointer"
               key={key}
+              htmlFor={key}
             >
               <div className="flex align-middle gap-2">
                 <input
                   type="checkbox"
-                  name={key}
                   id={key}
                   onChange={(e) => updateFormStateValue(key, e.target.checked)}
                   checked={formState[key as keyof ContractProps]}
@@ -105,51 +127,5 @@ export function Form({
         Share with Gabriel
       </button>
     </form>
-  );
-}
-
-function NumericInput({
-  id,
-  label,
-  defaultValue,
-  type,
-  onInput,
-}: {
-  id: string;
-  label: string;
-  onInput: (id: string, value: number) => void;
-  defaultValue?: number;
-  type?: "money" | "percentage";
-}) {
-  let prefix: string | undefined;
-  let suffix: string | undefined;
-  switch (type) {
-    case "money":
-      prefix = "$";
-      break;
-    case "percentage":
-      suffix = "%";
-    default:
-      break;
-  }
-  return (
-    <div className="flex flex-col">
-      <label className="me-2 text-lg" htmlFor={id}>
-        {label}:
-      </label>
-      <CurrencyInput
-        className="border rounded bg-transparent text-foreground p-2 border-neutral-500"
-        id={id}
-        name={id}
-        placeholder="Enter a number"
-        prefix={prefix}
-        suffix={suffix}
-        min={1}
-        decimalsLimit={2}
-        allowNegativeValue={false}
-        defaultValue={defaultValue}
-        onValueChange={(value, _, values) => onInput(id, values?.float || 0)}
-      />
-    </div>
   );
 }

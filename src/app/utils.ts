@@ -20,7 +20,7 @@ export function calculateContractValue({ ...props }: ContractProps) {
     }
   }
   if (props.p) {
-    value += 300 * 3;
+    value += 300 * 12;
   }
   return value;
 }

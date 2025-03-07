@@ -21,7 +21,6 @@ export function Form({
     f: getParam("f", 20),
     s: getParam("s", 0),
     h: getParam("h", false),
-    cc: getParam("cc", false),
     x: getParam("x", false),
     p: getParam("p", false),
     d: getParam("d", false),
@@ -62,7 +61,6 @@ export function Form({
           type="money"
         />
         {[
-          ["cc", "Credit card"],
           ["x", "Exclusivity"],
           ["p", "Payroll"],
           ["d", "Deferred payment"],

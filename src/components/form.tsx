@@ -37,28 +37,27 @@ export function Form({
   useEffect(() => onValuesChange(formState), [formState]);
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <div className="gap-3 grid grid-cols-1 sm:grid-cols-2">
-        <NumericInput
-          id="n"
-          defaultValue={formState.n}
-          onInput={updateFormStateValue}
-          label="Number of placements"
-        />
-        <NumericInput
-          id="f"
-          defaultValue={formState.f}
-          onInput={updateFormStateValue}
-          label="Base Placement Fee"
-          type="percentage"
-        />
-        <NumericInput
-          id="s"
-          defaultValue={formState.s}
-          onInput={updateFormStateValue}
-          label="Expected Average Salary"
-          type="money"
-        />
+    <form onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-4">
+      <div className="gap-4 grid grid-cols-1 sm:grid-cols-2">
+        <section className="border rounded p-4 flex flex-col gap-2 border-neutral-500">
+          <h1 className="text-xl">Placement fee</h1>
+          <strong className="text-4xl ">{formState.f}%</strong>
+        </section>
+        <div className="flex flex-col gap-4">
+          <NumericInput
+            id="n"
+            defaultValue={formState.n}
+            onInput={updateFormStateValue}
+            label="Number of placements"
+          />
+          <NumericInput
+            id="s"
+            defaultValue={formState.s}
+            onInput={updateFormStateValue}
+            label="Expected Average Salary"
+            type="money"
+          />
+        </div>
         {[
           ["x", "Exclusivity"],
           ["p", "Payroll"],
@@ -132,11 +131,11 @@ function NumericInput({
   }
   return (
     <div className="flex flex-col">
-      <label className="me-2" htmlFor={id}>
+      <label className="me-2 text-lg" htmlFor={id}>
         {label}:
       </label>
       <CurrencyInput
-        className="border rounded bg-transparent text-foreground p-2"
+        className="border rounded bg-transparent text-foreground p-2 border-neutral-500"
         id={id}
         name={id}
         placeholder="Enter a number"

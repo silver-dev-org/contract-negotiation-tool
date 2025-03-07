@@ -42,7 +42,7 @@ export default function Page() {
         </div>
         <dl className="font-serif flex flex-col justify-center xl:w-1/2">
           <dt className="text-lg italic mb-4">Expected contract value: </dt>
-          <dd className="text-primary font-extralight text-8xl">
+          <dd className="text-primary font-extralight text-6xl sm:text-8xl">
             {expectedContractValue
               ? new Intl.NumberFormat("en-US", {
                   style: "currency",

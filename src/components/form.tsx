@@ -91,9 +91,14 @@ export function Form({
         onClick={() => {
           const queryString = Object.entries(formState)
             .filter(([key, value]) => value)
-            .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+            .map(([key, value]) => `${key}=${value}`)
             .join("&");
-          window.location.href = `mailto:gabriel@silver.dev?subject=Contract Details&body=View the updated contract details here: ${window.location.origin}?${queryString}`;
+          const url = encodeURIComponent(
+            `${window.location.origin}?${queryString}`
+          );
+          window.location.href =
+            `mailto:gabriel@silver.dev?subject=Contract Details&body=View the updated contract details here: ` +
+            url;
         }}
       >
         Share with Gabriel

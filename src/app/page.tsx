@@ -28,11 +28,9 @@ export default function Page() {
             onValuesChange={(data) => {
               const xs = [];
               const ys = [];
-              for (let x = 0; x <= data.numberOfPlacements; x++) {
+              for (let x = 0; x <= data.n; x++) {
                 xs.push(x);
-                ys.push(
-                  calculateContractValue({ ...data, numberOfPlacements: x })
-                );
+                ys.push(calculateContractValue({ ...data, n: x }));
               }
               setXValues(xs);
               setYValues(ys);

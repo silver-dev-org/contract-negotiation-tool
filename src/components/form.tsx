@@ -1,81 +1,152 @@
 import { ContractProps } from "@/app/utils";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 
 export function Form({
-  onValuesChange: onValuesChange,
+  onValuesChange,
 }: {
-  onValuesChange?: (data: ContractProps) => void;
+  onValuesChange: (formState: ContractProps) => void;
 }) {
-  const [f, setF] = useState<number>();
-  const [n, setN] = useState<number>();
+  const searchParams = useSearchParams();
+  function getParam(key: string, defaultValue: any) {
+    const param = searchParams.get(key);
+    if (param === null) return defaultValue;
+    if (param === "true") return true;
+    return Number(param);
+  }
 
-  useEffect(() => {
-    if (!n || n < 1 || !f || !onValuesChange) return;
-    onValuesChange({
-      numberOfPlacements: n,
-      basePlacementFee: f,
-    });
-  }, [n, f]);
+  const [formState, setFormState] = useState<ContractProps>({
+    n: getParam("n", 1),
+    f: getParam("f", 20),
+    s: getParam("s", 0),
+    h: getParam("h", false),
+    cc: getParam("cc", false),
+    x: getParam("x", false),
+    p: getParam("p", false),
+    d: getParam("d", false),
+    g: getParam("g", false),
+  });
+
+  function updateFormStateValue(key: string, value: any) {
+    setFormState((previousFormState) => ({
+      ...previousFormState,
+      [key]: value,
+    }));
+  }
+
+  useEffect(() => onValuesChange(formState), [formState]);
 
   return (
     <form onSubmit={(e) => e.preventDefault()}>
       <div className="gap-3 grid grid-cols-1 sm:grid-cols-2">
-        <div className="flex flex-col">
-          <label className="me-2" htmlFor="n">
-            Number of placements:
-          </label>
-          <input
-            className="border rounded bg-transparent text-foreground p-2"
-            type="number"
-            id="n"
-            name="n"
-            placeholder="Enter a number"
-            min={1}
-            max={100}
-            onChange={(e) => setN(parseInt(e.target.value) || undefined)}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="me-2" htmlFor="f">
-            Base placement fee:
-          </label>
-          <CurrencyInput
-            className="border rounded bg-transparent text-foreground p-2"
-            id="f"
-            name="f"
-            placeholder="Enter a number"
-            decimalsLimit={2}
-            prefix="$"
-            onValueChange={(value, name, values) => {
-              if (!values) return;
-              if (!values.float) return;
-              setF(values.float);
-            }}
-          />
-        </div>
-        <fieldset className="p-2 border flex flex-col rounded">
-          <legend>Payment method</legend>
-          <div>
+        <NumericInput
+          id="n"
+          defaultValue={formState.n}
+          onInput={updateFormStateValue}
+          label="Number of placements"
+          helpText="≥ 3 → 25% discount"
+        />
+        <NumericInput
+          id="f"
+          defaultValue={formState.f}
+          onInput={updateFormStateValue}
+          label="Base Placement Fee"
+          type="percentage"
+        />
+        <NumericInput
+          id="s"
+          defaultValue={formState.s}
+          onInput={updateFormStateValue}
+          label="Expected Average Salary"
+          type="money"
+        />
+        {[
+          ["cc", "Credit card"],
+          ["x", "Exclusivity"],
+          ["p", "Payroll"],
+          ["d", "Deferred payment"],
+          ["g", "Pay as you go"],
+        ].map(([key, label]) => (
+          <div
+            key={key}
+            className="flex align-middle border rounded h-min p-2 gap-2 mt-auto"
+          >
             <input
-              className="border rounded bg-transparent text-foreground"
               type="checkbox"
-              id="cc"
-              name="cc"
+              name={key}
+              id={key}
+              checked={formState[key as keyof ContractProps] as boolean}
+              onChange={(e) => updateFormStateValue(key, e.target.checked)}
             />
-            <label className="ms-2" htmlFor="cc">
-              Credit card
+            <label className="size-full" htmlFor={key}>
+              {label}
             </label>
           </div>
-        </fieldset>
+        ))}
       </div>
-      <a
-        className="block text-center uppercase border rounded bg-primary hover:bg-primary/90 text-white border-white font-semibold p-2 mt-4 disabled:bg-neutral-500 disabled:bg-foreground-diminished"
-        href="mailto:gabriel@silver.dev?subject=Email Subject&body=Contents of email"
-        role="button"
+      <button
+        type="button"
+        className="w-full text-center uppercase border rounded bg-primary hover:bg-primary/90 text-white border-white font-semibold p-2 mt-4"
+        onClick={() => {
+          const queryString = Object.entries(formState)
+            .filter(([key, value]) => value)
+            .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+            .join("&");
+          window.location.href = `mailto:gabriel@silver.dev?subject=Contract Details&body=View the updated contract details here: ${window.location.origin}?${queryString}`;
+        }}
       >
         Share with Gabriel
-      </a>
+      </button>
     </form>
+  );
+}
+
+function NumericInput({
+  id,
+  label,
+  helpText,
+  defaultValue,
+  type,
+  onInput,
+}: {
+  id: string;
+  label: string;
+  helpText?: string;
+  onInput: (id: string, value: number) => void;
+  defaultValue?: number;
+  type?: "money" | "percentage";
+}) {
+  let prefix: string | undefined;
+  let suffix: string | undefined;
+  switch (type) {
+    case "money":
+      prefix = "$";
+      break;
+    case "percentage":
+      suffix = "%";
+    default:
+      break;
+  }
+  return (
+    <div className="flex flex-col">
+      <label className="me-2" htmlFor={id}>
+        {label}:
+      </label>
+      <CurrencyInput
+        className="border rounded bg-transparent text-foreground p-2"
+        id={id}
+        name={id}
+        placeholder="Enter a number"
+        prefix={prefix}
+        suffix={suffix}
+        min={1}
+        decimalsLimit={2}
+        allowNegativeValue={false}
+        defaultValue={defaultValue}
+        onValueChange={(value, _, values) => onInput(id, values?.float || 0)}
+      />
+      {helpText && <p className="text-gray-500">{helpText}</p>}
+    </div>
   );
 }

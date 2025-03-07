@@ -4,7 +4,7 @@ import Image from "next/image";
 import SilverLogoWhite from "../../public/silver-logo-white.svg";
 
 import { Chart, Form } from "@/components";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { calculateContractValue } from "./utils";
 
 export default function Page() {
@@ -24,19 +24,21 @@ export default function Page() {
       </header>
       <div className="flex flex-col xl:flex-row gap-8 container mx-auto p-8">
         <div className="xl:w-1/2 xl:flex xl:justify-end">
-          <Form
-            onValuesChange={(data) => {
-              const xs = [];
-              const ys = [];
-              for (let x = 0; x <= data.n; x++) {
-                xs.push(x);
-                ys.push(calculateContractValue({ ...data, n: x }));
-              }
-              setXValues(xs);
-              setYValues(ys);
-              setExpectedContractValue(calculateContractValue(data));
-            }}
-          />
+          <Suspense>
+            <Form
+              onValuesChange={(data) => {
+                const xs = [];
+                const ys = [];
+                for (let x = 0; x <= data.n; x++) {
+                  xs.push(x);
+                  ys.push(calculateContractValue({ ...data, n: x }));
+                }
+                setXValues(xs);
+                setYValues(ys);
+                setExpectedContractValue(calculateContractValue(data));
+              }}
+            />
+          </Suspense>
         </div>
         <dl className="font-serif flex flex-col justify-center xl:w-1/2">
           <dt className="text-lg italic mb-4">Expected contract value: </dt>

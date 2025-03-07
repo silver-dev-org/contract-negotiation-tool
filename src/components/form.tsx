@@ -59,27 +59,30 @@ export function Form({
           />
         </div>
         {[
-          ["x", "Exclusivity"],
-          ["p", "Payroll"],
-          ["d", "Deferred payment"],
-          ["g", "Pay as you go"],
-        ].map(([key, label]) => (
-          <div
-            key={key}
-            className="flex align-middle border rounded h-min p-2 gap-2 mt-auto"
-          >
-            <input
-              type="checkbox"
-              name={key}
-              id={key}
-              checked={formState[key as keyof ContractProps] as boolean}
-              onChange={(e) => updateFormStateValue(key, e.target.checked)}
-            />
-            <label className="size-full" htmlFor={key}>
-              {label}
+          ["x", "Exclusivity", "Each role is handled by only one agency."],
+          ["p", "Payroll", "Delegate wages management."],
+          ["d", "Deferred payment", "Pay 6 months after the hire was made."],
+          ["g", "Pay as you go", "Pay in 3 months instead of all at once."],
+        ].map(([key, label, description]) => {
+          return (
+            <label
+              className="flex flex-col border rounded p-2 border-neutral-500 cursor-pointer"
+              key={key}
+            >
+              <div className="flex align-middle gap-2">
+                <input
+                  type="checkbox"
+                  name={key}
+                  id={key}
+                  onChange={(e) => updateFormStateValue(key, e.target.checked)}
+                  checked={formState[key as keyof ContractProps]}
+                />
+                <span className="text-lg">{label}</span>
+              </div>
+              <p className="text-gray-400 text-sm">{description}</p>
             </label>
-          </div>
-        ))}
+          );
+        })}
       </div>
       <button
         type="button"

@@ -91,12 +91,14 @@ export function Form({
             .filter(([key, value]) => value)
             .map(([key, value]) => `${key}=${value}`)
             .join("&");
-          const url = encodeURIComponent(
-            `${window.location.origin}?${queryString}`
-          );
-          window.location.href =
-            `mailto:gabriel@silver.dev?subject=Contract Details&body=View the updated contract details here: ` +
-            url;
+          const contractUrl = `${window.location.origin}?${queryString}`;
+          const emailBody = `View the updated contract details here: ${contractUrl}`;
+          const mailtoLink = `mailto:gabriel@silver.dev?subject=Contract Details&body=${encodeURIComponent(
+            emailBody
+          )}`;
+          const newTab = window.open(contractUrl, "_blank");
+          if (newTab) newTab.focus();
+          setTimeout(() => (window.location.href = mailtoLink), 500);
         }}
       >
         Share with Gabriel

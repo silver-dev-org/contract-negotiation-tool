@@ -5,11 +5,10 @@ import SilverLogoWhite from "../../public/silver-logo-white.svg";
 
 import { Chart, Form } from "@/components";
 import { Suspense, useState } from "react";
-import { calculateContractValue } from "./utils";
+import { calculateContractValue, payrollCost } from "./utils";
 
 export default function Page() {
-  const [xValues, setXValues] = useState<number[]>([]);
-  const [yValues, setYValues] = useState<number[]>([]);
+  const [fees, setFees] = useState<number[]>([]);
   const [expectedContractValue, setExpectedContractValue] = useState<number>();
 
   return (
@@ -26,15 +25,26 @@ export default function Page() {
         <Suspense>
           <Form
             onValuesChange={(data) => {
-              const xs = [];
-              const ys = [];
-              for (let x = 0; x <= data.n; x++) {
-                xs.push(x);
-                ys.push(calculateContractValue({ ...data, n: x }));
+              const expectedContractValue = calculateContractValue(data);
+              const fees = [];
+              const startingMonth = data.d ? 6 : 3;
+              let fee = 0;
+              for (let month = 1; month <= 12; month++) {
+                if (data.p) {
+                  fee += payrollCost;
+                }
+                if (
+                  month == startingMonth ||
+                  (data.g &&
+                    month >= startingMonth &&
+                    month < startingMonth + 3)
+                ) {
+                  fee += expectedContractValue / (data.g ? 3 : 1);
+                }
+                fees.push(fee);
               }
-              setXValues(xs);
-              setYValues(ys);
-              setExpectedContractValue(calculateContractValue(data));
+              setFees(fees);
+              setExpectedContractValue(expectedContractValue);
             }}
           />
         </Suspense>
@@ -50,7 +60,7 @@ export default function Page() {
                 : "-"}
             </dd>
           </dl>
-          <Chart xValues={xValues} yValues={yValues} />
+          <Chart fees={fees} />
         </div>
       </div>
     </div>

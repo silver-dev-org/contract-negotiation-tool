@@ -1,3 +1,5 @@
+export const payrollCost = 300;
+
 export interface ContractProps {
   n: number;
   f: number;
@@ -20,7 +22,7 @@ export function calculateContractValue({ ...props }: ContractProps) {
     }
   }
   if (props.p) {
-    value += 300 * 12;
+    value += payrollCost * 12;
   }
   return value;
 }

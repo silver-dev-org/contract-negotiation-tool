@@ -40,7 +40,7 @@ export function Form({
     <form onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-4">
       <div className="gap-4 grid grid-cols-1 sm:grid-cols-2">
         <section className="border rounded p-4 flex flex-col gap-2 border-neutral-500">
-          <h1 className="text-xl">Placement fee</h1>
+          <h1 className="text-xl text-gray-400">Base placement fee</h1>
           <strong className="text-4xl ">{formState.f}%</strong>
         </section>
         <div className="flex flex-col gap-4">

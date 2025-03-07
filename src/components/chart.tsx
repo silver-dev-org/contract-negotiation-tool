@@ -73,7 +73,7 @@ export function Chart({
         },
         plugins: {
           legend: {
-            onClick: () => {},
+            display: false,
           },
           tooltip: {
             callbacks: {

@@ -13,7 +13,7 @@ export default function Page() {
   const [expectedContractValue, setExpectedContractValue] = useState<number>();
 
   return (
-    <div className="flex flex-col xl:gap-24">
+    <div className="flex flex-col xl:gap-24 h-screen">
       <header className="text-foreground font-serif flex justify-between container mx-auto items-center p-4">
         <a href="https://silver.dev" target="_blank">
           <Image width={200} src={SilverLogoWhite} alt="Silver.dev" />
@@ -22,38 +22,36 @@ export default function Page() {
           Contract Negotiation Tool
         </h1>
       </header>
-      <div className="flex flex-col xl:flex-row gap-8 container mx-auto p-8">
-        <div className="xl:w-1/2 xl:flex xl:justify-end">
-          <Suspense>
-            <Form
-              onValuesChange={(data) => {
-                const xs = [];
-                const ys = [];
-                for (let x = 0; x <= data.n; x++) {
-                  xs.push(x);
-                  ys.push(calculateContractValue({ ...data, n: x }));
-                }
-                setXValues(xs);
-                setYValues(ys);
-                setExpectedContractValue(calculateContractValue(data));
-              }}
-            />
-          </Suspense>
+      <div className="flex flex-col xl:flex-row gap-8 container mx-auto p-8 flex-grow">
+        <Suspense>
+          <Form
+            onValuesChange={(data) => {
+              const xs = [];
+              const ys = [];
+              for (let x = 0; x <= data.n; x++) {
+                xs.push(x);
+                ys.push(calculateContractValue({ ...data, n: x }));
+              }
+              setXValues(xs);
+              setYValues(ys);
+              setExpectedContractValue(calculateContractValue(data));
+            }}
+          />
+        </Suspense>
+        <div className="flex flex-col gap-4 flex-grow">
+          <dl className="font-serif flex flex-col justify-center">
+            <dt className="text-lg italic mb-4">Expected contract value: </dt>
+            <dd className="text-primary font-extralight text-6xl sm:text-8xl">
+              {expectedContractValue
+                ? new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  }).format(expectedContractValue)
+                : "-"}
+            </dd>
+          </dl>
+          <Chart xValues={xValues} yValues={yValues} />
         </div>
-        <dl className="font-serif flex flex-col justify-center xl:w-1/2">
-          <dt className="text-lg italic mb-4">Expected contract value: </dt>
-          <dd className="text-primary font-extralight text-6xl sm:text-8xl">
-            {expectedContractValue
-              ? new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                }).format(expectedContractValue)
-              : "-"}
-          </dd>
-        </dl>
-      </div>
-      <div className="container mx-auto">
-        <Chart xValues={xValues} yValues={yValues} />
       </div>
     </div>
   );

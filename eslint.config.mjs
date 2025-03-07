@@ -14,6 +14,7 @@ const eslintConfig = [
     extends: ["next/core-web-vitals", "next/typescript"],
     rules: {
       "@next/next/no-html-link-for-pages": "off",
+      "@typescript-eslint/no-explicit-any": "off",
     },
   }),
 ];

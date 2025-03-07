@@ -44,7 +44,6 @@ export function Form({
           defaultValue={formState.n}
           onInput={updateFormStateValue}
           label="Number of placements"
-          helpText="≥ 3 → 25% discount"
         />
         <NumericInput
           id="f"
@@ -110,14 +109,12 @@ export function Form({
 function NumericInput({
   id,
   label,
-  helpText,
   defaultValue,
   type,
   onInput,
 }: {
   id: string;
   label: string;
-  helpText?: string;
   onInput: (id: string, value: number) => void;
   defaultValue?: number;
   type?: "money" | "percentage";
@@ -151,7 +148,6 @@ function NumericInput({
         defaultValue={defaultValue}
         onValueChange={(value, _, values) => onInput(id, values?.float || 0)}
       />
-      {helpText && <p className="text-gray-500">{helpText}</p>}
     </div>
   );
 }

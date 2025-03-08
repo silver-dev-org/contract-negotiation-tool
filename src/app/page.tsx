@@ -10,14 +10,18 @@ import { calculateContractValue, payrollCost } from "./utils";
 export default function Page() {
   const [fees, setFees] = useState<number[]>([]);
   const [expectedContractValue, setExpectedContractValue] = useState<number>();
+  const [
+    expectedContractValueWithoutDiscounts,
+    setExpectedContractValueWithoutDiscounts,
+  ] = useState<number>();
 
   return (
-    <div className="flex flex-col xl:gap-24 h-screen">
+    <div className="flex flex-col xl:gap-16 h-screen">
       <header className="text-foreground font-serif flex justify-between container mx-auto items-center p-4">
         <a href="https://silver.dev" target="_blank">
           <Image width={200} src={SilverLogoWhite} alt="Silver.dev" />
         </a>
-        <h1 className="text-xl sm:text-2xl font-bold">
+        <h1 className="text-lg sm:text-2xl font-bold">
           Contract Negotiation Tool
         </h1>
       </header>
@@ -25,7 +29,7 @@ export default function Page() {
         <Suspense>
           <Form
             onValuesChange={(data) => {
-              const expectedContractValue = calculateContractValue(data);
+              const expectedContractValue = calculateContractValue(true, data);
               const fees = [];
               const startingMonth = data.d ? 6 : 3;
               let fee = 0;
@@ -44,6 +48,9 @@ export default function Page() {
                 fees.push(fee);
               }
               setFees(fees);
+              setExpectedContractValueWithoutDiscounts(
+                calculateContractValue(false, data)
+              );
               setExpectedContractValue(expectedContractValue);
             }}
           />
@@ -51,13 +58,25 @@ export default function Page() {
         <div className="flex flex-col gap-4 flex-grow xl:w-1/2">
           <dl className="font-serif flex flex-col justify-center">
             <dt className="text-lg italic mb-4">Expected contract value: </dt>
-            <dd className="text-primary font-extralight text-6xl sm:text-8xl">
-              {expectedContractValue
-                ? new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }).format(expectedContractValue)
-                : "-"}
+            <dd className="flex flex-col gap-2">
+              {expectedContractValueWithoutDiscounts &&
+                expectedContractValue !=
+                  expectedContractValueWithoutDiscounts && (
+                  <span className="line-through text-gray-500 text-4xl">
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(expectedContractValueWithoutDiscounts)}
+                  </span>
+                )}
+              <span className="text-primary font-extralight text-6xl sm:text-8xl">
+                {expectedContractValue
+                  ? new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(expectedContractValue)
+                  : "-"}
+              </span>
             </dd>
           </dl>
           <Chart fees={fees} />

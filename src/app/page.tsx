@@ -21,9 +21,6 @@ export default function Page() {
         <a href="https://silver.dev" target="_blank">
           <Image width={200} src={SilverLogoWhite} alt="Silver.dev" />
         </a>
-        <h1 className="text-lg sm:text-2xl font-bold">
-          Contract Negotiation Tool
-        </h1>
       </header>
       <div className="flex flex-col xl:flex-row gap-8 container mx-auto p-8 flex-grow">
         <Suspense>

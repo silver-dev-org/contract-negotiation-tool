@@ -19,7 +19,7 @@ export function Form({
   const [formState, setFormState] = useState<ContractProps>({
     n: getParam("n", 1),
     f: getParam("f", 20),
-    s: getParam("s", 0),
+    s: getParam("s", 75000),
     h: getParam("h", false),
     x: getParam("x", false),
     p: getParam("p", false),

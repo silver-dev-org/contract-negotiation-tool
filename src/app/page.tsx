@@ -59,9 +59,8 @@ export default function Page() {
           <dl className="font-serif flex flex-col justify-center">
             <dt className="text-lg italic mb-4">Expected contract value: </dt>
             <dd className="flex flex-col gap-2">
-              {expectedContractValueWithoutDiscounts &&
-                expectedContractValue !=
-                  expectedContractValueWithoutDiscounts && (
+              {expectedContractValue != expectedContractValueWithoutDiscounts &&
+                expectedContractValueWithoutDiscounts && (
                   <span className="line-through text-gray-500 text-4xl">
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",

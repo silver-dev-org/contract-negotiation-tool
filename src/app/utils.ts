@@ -12,18 +12,19 @@ export interface ContractProps {
   [key: string]: any;
 }
 
-export function calculateContractValue(
-  includeDiscounts: boolean,
-  props: ContractProps
+export function calculateContractCost(
+  data: ContractProps,
+  includePayroll: boolean = true,
+  includeDiscounts: boolean = true
 ) {
-  let value = props.n * (props.f / 100) * props.s;
-  if (props.p) {
+  let value = data.n * (data.f / 100) * data.s;
+  if (data.p && includePayroll) {
     value += payrollCost * 12;
   }
-  if (!props.d && includeDiscounts) {
-    if (props.h || props.n >= 3) {
+  if (!data.d && includeDiscounts) {
+    if (data.h || data.n >= 3) {
       value -= value * 0.25;
-    } else if (props.x) {
+    } else if (data.x) {
       value -= value * 0.15;
     }
   }

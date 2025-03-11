@@ -1,7 +1,18 @@
 import { ContractProps } from "@/app/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
+import { Label } from "@radix-ui/react-label";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
+import { Input } from "./ui/input";
 
 export function Form({
   onValuesChange,
@@ -37,78 +48,67 @@ export function Form({
   useEffect(() => onValuesChange(formState), [formState]);
 
   return (
-    <form onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-4">
-      <div className="gap-4 grid grid-cols-1 sm:grid-cols-2">
-        <section className="border rounded p-4 flex flex-col gap-2 border-neutral-500">
-          <h1 className="text-xl text-gray-400">Placement fee</h1>
-          <strong className="text-4xl ">{formState.f}%</strong>
-        </section>
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col">
-            <label className="me-2 text-lg" htmlFor="numberOfPlacementsInput">
-              Number of placements:
-            </label>
-            <input
-              className="border rounded bg-transparent text-foreground p-2 border-neutral-500"
-              id="numberOfPlacementsInput"
-              type="number"
-              placeholder="Enter a number"
-              min={1}
-              step={1}
-              defaultValue={formState.n}
-              onInput={(e) => updateFormStateValue("n", e.currentTarget.value)}
-            />
-          </div>
-          <div className="flex flex-col">
-            <label
-              className="me-2 text-lg"
-              htmlFor="expectedAverageSalaryInput"
-            >
-              Expected Average Salary:
-            </label>
-            <CurrencyInput
-              className="border rounded bg-transparent text-foreground p-2 border-neutral-500"
-              id="expectedAverageSalaryInput"
-              placeholder="Enter a number"
-              prefix="$"
-              decimalsLimit={2}
-              allowNegativeValue={false}
-              defaultValue={formState.s}
-              onValueChange={(value, _, values) =>
-                updateFormStateValue("s", values?.float || 0)
-              }
-            />
-          </div>
-        </div>
-        {[
-          ["x", "Exclusivity", "Each role is handled by only one agency."],
-          ["p", "Payroll", "Delegate wages management."],
-          ["d", "Deferred payment", "Pay 6 months after the hire was made."],
-          ["g", "Pay as you go", "Pay in 3 months instead of all at once."],
-        ].map(([key, label, description]) => {
-          return (
-            <label
-              className="flex flex-col border rounded p-2 border-neutral-500 cursor-pointer"
-              key={key}
-              htmlFor={key}
-            >
-              <div className="flex align-middle gap-2">
-                <input
-                  type="checkbox"
-                  id={key}
-                  onChange={(e) => updateFormStateValue(key, e.target.checked)}
-                  checked={formState[key as keyof ContractProps]}
-                />
-                <span className="text-lg">{label}</span>
-              </div>
-              <p className="text-gray-400 text-sm">{description}</p>
-            </label>
-          );
-        })}
+    <div className="flex flex-col gap-6 text-nowrap sm:min-w-fit">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">{formState.f}%</CardTitle>
+          <CardDescription>Placement fee</CardDescription>
+        </CardHeader>
+      </Card>
+      <div className="grid w-full items-center gap-1.5">
+        <Label htmlFor="numberOfPlacementsInput">Number of placements:</Label>
+        <Input
+          id="numberOfPlacementsInput"
+          type="number"
+          min={1}
+          step={1}
+          defaultValue={formState.n}
+          onInput={(e) => updateFormStateValue("n", e.currentTarget.value)}
+        />
       </div>
-      <button
+      <div className="grid w-full items-center gap-1.5">
+        <Label htmlFor="expectedAverageSalaryInput">
+          Expected Average Salary:
+        </Label>
+        <CurrencyInput
+          className={cn(
+            "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+          )}
+          id="expectedAverageSalaryInput"
+          placeholder="Enter a number"
+          prefix="$"
+          decimalsLimit={2}
+          allowNegativeValue={false}
+          defaultValue={formState.s}
+          onValueChange={(value, _, values) =>
+            updateFormStateValue("s", values?.float || 0)
+          }
+        />
+      </div>
+      {[
+        ["x", "Exclusivity", "Each role is handled by only one agency."],
+        ["p", "Payroll", "Delegate wages management."],
+        ["d", "Deferred payment", "Pay 6 months after the hire was made."],
+        ["g", "Pay as you go", "Pay in 3 months instead of all at once."],
+      ].map(([key, label, description]) => {
+        return (
+          <div key={key} className="items-top flex space-x-2">
+            <Checkbox
+              id={key}
+              onCheckedChange={(checked) => updateFormStateValue(key, checked)}
+              checked={formState[key as keyof ContractProps]}
+            />
+            <div className="grid gap-1.5 leading-none">
+              <Label htmlFor={key}>{label}</Label>
+              <p className="text-sm text-muted-foreground text-wrap">
+                {description}
+              </p>
+            </div>
+          </div>
+        );
+      })}
+      <Button
         type="button"
-        className="w-full text-center uppercase border rounded bg-primary hover:bg-primary/90 text-white border-white font-semibold p-2"
         onClick={() => {
           const queryString = Object.entries(formState)
             .filter(([key, value]) => value)
@@ -125,7 +125,7 @@ export function Form({
         }}
       >
         Share with Gabriel
-      </button>
-    </form>
+      </Button>
+    </div>
   );
 }

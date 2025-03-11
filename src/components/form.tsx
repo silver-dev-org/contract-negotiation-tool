@@ -9,6 +9,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { Label } from "@radix-ui/react-label";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
@@ -19,6 +20,8 @@ export function Form({
 }: {
   onValuesChange: (formState: ContractProps) => void;
 }) {
+  const [shareLink, setShareLink] = useState("");
+
   const searchParams = useSearchParams();
   function getParam(key: string, defaultValue: any) {
     const param = searchParams.get(key);
@@ -108,23 +111,23 @@ export function Form({
         );
       })}
       <Button
-        type="button"
+        asChild
         onClick={() => {
           const queryString = Object.entries(formState)
             .filter(([key, value]) => value)
             .map(([key, value]) => `${key}=${value}`)
             .join("&");
-          const contractUrl = `${window.location.origin}?${queryString}`;
-          const emailBody = `View the updated contract details here: ${contractUrl}`;
-          const mailtoLink = `mailto:gabriel@silver.dev?subject=Contract Details&body=${encodeURIComponent(
-            emailBody
-          )}`;
-          const newTab = window.open(contractUrl, "_blank");
-          if (newTab) newTab.focus();
-          setTimeout(() => (window.location.href = mailtoLink), 500);
+          const emailSubject = encodeURIComponent("Contract Details");
+          const emailBody = encodeURIComponent(
+            `View the updated contract details here: ${window.location.origin}?${queryString}.`
+          );
+          const shareLink = `mailto:gabriel@silver.dev?subject=${emailSubject}&body=${emailBody}`;
+          setShareLink(shareLink);
         }}
       >
-        Share with Gabriel
+        <Link target="_blank" href={shareLink}>
+          Share with Gabriel
+        </Link>
       </Button>
     </div>
   );

@@ -4,7 +4,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import NumberFlow from "@number-flow/react";
 import Image from "next/image";
+
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import SilverLogoWhite from "../../public/silver-logo-white.svg";
 
@@ -63,7 +65,7 @@ export default function Page() {
           <div className="font-serif flex flex-col justify-center">
             <p className="italic">Expected contract cost:</p>
             <p className="text-primary font-extralight text-6xl sm:text-8xl mt-6 mb-6">
-              {formatMoney(cost || 0)}
+              <NumberFlow prefix="$" value={cost || 0} />
             </p>
           </div>
           <ChartContainer

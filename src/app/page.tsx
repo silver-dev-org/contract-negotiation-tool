@@ -50,11 +50,21 @@ export default function Page() {
     if (param === "true") return true;
     return Number(param);
   }
+  const booleanProps = [
+    ["x", "Exclusivity", "Each role is handled by only one agency."],
+    ["p", "Payroll", "Delegate wages management."],
+    ["d", "Deferred payment", "Pay 6 months after the hire was made."],
+    ["g", "Pay as you go", "Pay in 3 months instead of all at once."],
+    [
+      "t",
+      "Strong guarantee",
+      "No fee will be due until the guarantee period (90 calendar days) is over.",
+    ],
+  ];
 
   useEffect(() => processContractProps(contractProps), [contractProps]);
 
   function processContractProps(props: ContractProps) {
-    console.log(props);
     const startingMonth = props.d ? 6 : 3;
     const chartData = [];
     const yAxis = 1000 + calculateContractCost(props, false, false);
@@ -115,28 +125,14 @@ export default function Page() {
               onValueChange={(value) => setContractProp("s", value)}
               currentValue={contractProps.s.toString()}
               options={[
-                { value: "50000", label: "50k" },
-                { value: "75000", label: "75k" },
-                { value: "100000", label: "100k+" },
+                { value: "50000", label: "$50k" },
+                { value: "75000", label: "$75k" },
+                { value: "100000", label: "$100k+" },
               ]}
             />
           </div>
           <div className="flex flex-col gap-2">
-            {[
-              ["x", "Exclusivity", "Each role is handled by only one agency."],
-              ["p", "Payroll", "Delegate wages management."],
-              [
-                "d",
-                "Deferred payment",
-                "Pay 6 months after the hire was made.",
-              ],
-              ["g", "Pay as you go", "Pay in 3 months instead of all at once."],
-              [
-                "t",
-                "Strong guarantee",
-                "No fee will be due until the guarantee period (90 calendar days) is over.",
-              ],
-            ].map(([key, label, description]) => {
+            {booleanProps.map(([key, label, description]) => {
               return (
                 <Label key={key} htmlFor={key}>
                   <Card
@@ -171,9 +167,20 @@ export default function Page() {
                 .filter(([key, value]) => value)
                 .map(([key, value]) => `${key}=${value}`)
                 .join("&");
+              const options: string[] = booleanProps
+                .filter(([key]) => contractProps[key] === true)
+                .map(([key, label]) => label);
               const emailSubject = encodeURIComponent("Contract Details");
               const emailBody = encodeURIComponent(
-                `View the updated contract details here: ${window.location.origin}?${queryString}.`
+                `Number of placements: ${contractProps.n}
+Expected average salary: ${new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  maximumFractionDigits: 0,
+                }).format(contractProps.s)}
+${options.length > 0 ? "Options:\n- " + options.join("\n- ") : ""}
+
+Link: ${window.location.origin}?${queryString}.`
               );
               const shareLink = `mailto:gabriel@silver.dev?subject=${emailSubject}&body=${emailBody}`;
               setShareLink(shareLink);

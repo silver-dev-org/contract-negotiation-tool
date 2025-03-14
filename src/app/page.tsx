@@ -42,7 +42,7 @@ export default function Page() {
     p: getParam("p", false),
     d: getParam("d", false),
     g: getParam("g", false),
-    t: getParam("t", false),
+    t: getParam("t", true),
   });
   function getParam(key: string, defaultValue: any) {
     const param = searchParams.get(key);
@@ -178,6 +178,7 @@ Expected average salary: ${new Intl.NumberFormat("en-US", {
                   currency: "USD",
                   maximumFractionDigits: 0,
                 }).format(contractProps.s)}
+
 ${options.length > 0 ? "Options:\n- " + options.join("\n- ") : ""}
 
 Link: ${window.location.origin}?${queryString}.`

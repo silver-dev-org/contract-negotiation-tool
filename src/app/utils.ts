@@ -15,8 +15,7 @@ export interface ContractProps {
 
 export function getDiscountPercentage({ ...data }: ContractProps) {
   if (data.d) return 0;
-  if (data.h || data.n >= 3) return 0.25;
-  if (data.x || data.t) return 0.15;
+  if (data.n >= 3 || data.x) return 0.25;
   return 0;
 }
 

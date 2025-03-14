@@ -178,10 +178,14 @@ Expected average salary: ${new Intl.NumberFormat("en-US", {
                   currency: "USD",
                   maximumFractionDigits: 0,
                 }).format(contractProps.s)}
-
-${options.length > 0 ? "Options:\n- " + options.join("\n- ") : ""}
-
-Link: ${window.location.origin}?${queryString}.`
+Placement fee: ${contractProps.f * (1 - discountPercentage)}%
+Expected contract cost: ${new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  maximumFractionDigits: 0,
+                }).format(cost || 0)}
+${options.length > 0 ? "\nOptions:\n- " + options.join("\n- ") + "\n" : ""}
+Link: ${window.location.origin}?${queryString}`
               );
               const shareLink = `mailto:gabriel@silver.dev?subject=${emailSubject}&body=${emailBody}`;
               setShareLink(shareLink);

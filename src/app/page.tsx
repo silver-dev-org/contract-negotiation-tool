@@ -7,30 +7,67 @@ import {
 import NumberFlow from "@number-flow/react";
 import Image from "next/image";
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { ContractProps } from "@/app/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { Label } from "@radix-ui/react-label";
+import { scaleLog } from "d3-scale";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import CurrencyInput from "react-currency-input-field";
+import { Bar, BarChart, XAxis, YAxis } from "recharts";
 import SilverLogoWhite from "../../public/silver-logo-white.svg";
 
-import { Form } from "@/components";
-import { Suspense, useState } from "react";
-import { calculateContractCost, ContractProps, payrollCost } from "./utils";
+import { calculateContractCost, payrollCost } from "./utils";
+const scale = scaleLog().base(Math.E);
 
 export default function Page() {
+  const searchParams = useSearchParams();
   const [chartData, setChartData] = useState<any[]>([]);
   const [cost, setCost] = useState<number>();
+  const [shareLink, setShareLink] = useState("");
+  const [contractProps, setContractProps] = useState<ContractProps>({
+    n: getParam("n", 1),
+    f: getParam("f", 20),
+    s: getParam("s", 75000),
+    h: getParam("h", false),
+    x: getParam("x", false),
+    p: getParam("p", false),
+    d: getParam("d", false),
+    g: getParam("g", false),
+    t: getParam("t", false),
+  });
+  function getParam(key: string, defaultValue: any) {
+    const param = searchParams.get(key);
+    if (param === null) return defaultValue;
+    if (param === "true") return true;
+    return Number(param);
+  }
 
-  function processFormData(data: ContractProps) {
-    const startingMonth = data.d ? 6 : 3;
+  useEffect(() => processContractProps(contractProps), [contractProps]);
+
+  function processContractProps(props: ContractProps) {
+    const startingMonth = props.d ? 6 : 3;
     const chartData = [];
-    const yAxis = 1000 + calculateContractCost(data, false, false);
+    const yAxis = 1000 + calculateContractCost(props, false, false);
     for (let monthNum = 1; monthNum <= 12; monthNum++) {
       const month = new Date();
       month.setMonth(month.getMonth() + monthNum);
       const fee =
         monthNum == startingMonth ||
-        (data.g && monthNum >= startingMonth && monthNum < startingMonth + 3)
-          ? Math.round(calculateContractCost(data, false) / (data.g ? 3 : 1))
+        (props.g && monthNum >= startingMonth && monthNum < startingMonth + 3)
+          ? Math.round(calculateContractCost(props, false) / (props.g ? 3 : 1))
           : 0;
-      const payroll = data.p ? payrollCost : 0;
+      const payroll = props.p ? payrollCost : 0;
       chartData.push({
         month: month.toLocaleString("default", { month: "long" }),
         fee: fee,
@@ -39,15 +76,14 @@ export default function Page() {
       });
     }
     setChartData(chartData);
-    setCost(calculateContractCost(data));
+    setCost(calculateContractCost(props));
   }
 
-  function formatMoney(n: number) {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 0,
-    }).format(n);
+  function setContractProp(key: string, value: any) {
+    setContractProps((params) => ({
+      ...params,
+      [key]: value,
+    }));
   }
 
   return (
@@ -58,18 +94,116 @@ export default function Page() {
         </a>
       </header>
       <div className="flex flex-col xl:flex-row gap-12 p-12 container mx-auto flex-grow">
-        <Suspense>
-          <Form onValuesChange={processFormData} />
-        </Suspense>
+        <div className="flex flex-col gap-4 sm:max-w-xs">
+          <div className="flex flex-col  gap-1.5">
+            <Label htmlFor="numberOfPlacementsInput">
+              Number of placements:
+            </Label>
+            <Input
+              id="numberOfPlacementsInput"
+              type="number"
+              min={1}
+              step={1}
+              defaultValue={contractProps.n}
+              onInput={(e) => setContractProp("n", e.currentTarget.value)}
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="expectedAverageSalaryInput">
+              Expected Average Salary:
+            </Label>
+            <CurrencyInput
+              className={cn(
+                "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              )}
+              id="expectedAverageSalaryInput"
+              placeholder="Enter a number"
+              prefix="$"
+              decimalsLimit={2}
+              allowNegativeValue={false}
+              defaultValue={contractProps.s}
+              onValueChange={(value, _, values) =>
+                setContractProp("s", values?.float || 0)
+              }
+            />
+          </div>
+          {[
+            ["x", "Exclusivity", "Each role is handled by only one agency."],
+            ["p", "Payroll", "Delegate wages management."],
+            ["d", "Deferred payment", "Pay 6 months after the hire was made."],
+            ["g", "Pay as you go", "Pay in 3 months instead of all at once."],
+            [
+              "t",
+              "Strong guarantee",
+              "No fee will be due until the guarantee period (90 calendar days) is over.",
+            ],
+          ].map(([key, label, description]) => {
+            return (
+              <Label key={key} htmlFor={key}>
+                <Card
+                  className={`transition-colors hover:bg-primary/10 cursor-pointer ${
+                    contractProps[key as keyof ContractProps] &&
+                    "border-primary"
+                  }`}
+                >
+                  <CardHeader className="p-4">
+                    <CardTitle className="flex gap-1.5">
+                      <Checkbox
+                        id={key}
+                        onCheckedChange={(checked) =>
+                          setContractProp(key, checked)
+                        }
+                        checked={contractProps[key as keyof ContractProps]}
+                      />
+                      {label}
+                    </CardTitle>
+                    <CardDescription>{description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </Label>
+            );
+          })}
+          <Button
+            asChild
+            className="bg-gradient-to-br from-zinc-500 via-zinc-50 to-zinc-500 duration-300 transition-all hover:opacity-50"
+            onClick={() => {
+              const queryString = Object.entries(contractProps)
+                .filter(([key, value]) => value)
+                .map(([key, value]) => `${key}=${value}`)
+                .join("&");
+              const emailSubject = encodeURIComponent("Contract Details");
+              const emailBody = encodeURIComponent(
+                `View the updated contract details here: ${window.location.origin}?${queryString}.`
+              );
+              const shareLink = `mailto:gabriel@silver.dev?subject=${emailSubject}&body=${emailBody}`;
+              setShareLink(shareLink);
+            }}
+          >
+            <Link target="_blank" href={shareLink}>
+              Share with Gabriel
+            </Link>
+          </Button>
+        </div>
         <div className="flex flex-col flex-grow">
-          <div className="font-serif flex flex-col justify-center">
-            <p className="italic">Expected contract cost:</p>
-            <p className="text-primary font-extralight text-6xl sm:text-8xl mt-6 mb-6">
-              <NumberFlow prefix="$" value={cost || 0} />
-            </p>
+          <div className="flex gap-3 mb-12">
+            <Card className="w-1/2 text-center">
+              <CardHeader className="h-full">
+                <CardTitle className="text-6xl my-auto font-serif">
+                  <NumberFlow prefix="$" value={cost || 0} />
+                </CardTitle>
+                <CardDescription>Expected contract cost</CardDescription>
+              </CardHeader>
+            </Card>
+            <Card className="w-1/2 text-center">
+              <CardHeader className="h-full">
+                <CardTitle className="text-6xl my-auto font-serif">
+                  {contractProps.f}%
+                </CardTitle>
+                <CardDescription>Placement fee</CardDescription>
+              </CardHeader>
+            </Card>
           </div>
           <ChartContainer
-            // config={{}}
             config={{
               fee: {
                 label: "Fee",
@@ -82,13 +216,19 @@ export default function Page() {
           >
             <BarChart accessibilityLayer data={chartData}>
               <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="payroll" fill="silver" stackId={1} />
+              <Bar dataKey="payroll" fill="#fa4529" stackId={1} />
               <Bar dataKey="fee" fill="white" stackId={1} />
-              <CartesianGrid vertical={false} />
               <YAxis
-                dataKey="yAxis"
-                tickFormatter={formatMoney}
                 tickLine={false}
+                orientation="right"
+                dataKey="yAxis"
+                tickFormatter={
+                  new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                    maximumFractionDigits: 0,
+                  }).format
+                }
               />
               <XAxis
                 dataKey="month"

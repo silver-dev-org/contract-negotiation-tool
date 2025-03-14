@@ -9,6 +9,7 @@ export interface ContractProps {
   p: boolean;
   d: boolean;
   g: boolean;
+  t: boolean;
   [key: string]: any;
 }
 
@@ -24,7 +25,7 @@ export function calculateContractCost(
   if (!data.d && includeDiscounts) {
     if (data.h || data.n >= 3) {
       value -= value * 0.25;
-    } else if (data.x) {
+    } else if (data.x || data.t) {
       value -= value * 0.15;
     }
   }

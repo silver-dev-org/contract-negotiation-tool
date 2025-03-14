@@ -103,157 +103,171 @@ export default function Page() {
           <Image width={200} src={SilverLogoWhite} alt="Silver.dev" />
         </a>
       </header>
-      <div className="flex flex-col xl:flex-row gap-12 p-12 container mx-auto flex-grow">
-        <div className="flex flex-col gap-4 sm:max-w-xs">
-          <div className="flex flex-col gap-2">
-            <p>Number of placements:</p>
-            <CardRadioGroup
-              name="n"
-              onValueChange={(value) => setContractProp("n", value)}
-              currentValue={contractProps.n.toString()}
-              options={[
-                { value: "1", label: "1" },
-                { value: "2", label: "2" },
-                { value: "3", label: "3+" },
-              ]}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <p>Expected Average Salary:</p>
-            <CardRadioGroup
-              name="s"
-              onValueChange={(value) => setContractProp("s", value)}
-              currentValue={contractProps.s.toString()}
-              options={[
-                { value: "50000", label: "$50k" },
-                { value: "75000", label: "$75k" },
-                { value: "100000", label: "$100k+" },
-              ]}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            {booleanProps.map(([key, label, description]) => {
-              return (
-                <Label key={key} htmlFor={key}>
-                  <Card
-                    className={`transition-colors hover:bg-primary/10 cursor-pointer ${
-                      contractProps[key as keyof ContractProps] &&
-                      "border-primary"
-                    }`}
-                  >
-                    <CardHeader className="p-4">
-                      <CardTitle className="flex gap-1.5">
-                        <Checkbox
-                          id={key}
-                          onCheckedChange={(checked) =>
-                            setContractProp(key, checked)
-                          }
-                          checked={contractProps[key as keyof ContractProps]}
-                        />
-                        {label}
-                      </CardTitle>
-                      <CardDescription>{description}</CardDescription>
-                    </CardHeader>
-                  </Card>
-                </Label>
-              );
-            })}
-          </div>
-          <Button
-            asChild
-            className="bg-gradient-to-br from-zinc-500 via-zinc-50 to-zinc-500 duration-300 transition-all hover:opacity-50"
-            onClick={() => {
-              const queryString = Object.entries(contractProps)
-                .filter(([key, value]) => value)
-                .map(([key, value]) => `${key}=${value}`)
-                .join("&");
-              const options: string[] = booleanProps
-                .filter(([key]) => contractProps[key] === true)
-                .map(([key, label]) => label);
-              const emailSubject = encodeURIComponent("Contract Details");
-              const emailBody = encodeURIComponent(
-                `Number of placements: ${contractProps.n}
-Expected average salary: ${new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                  maximumFractionDigits: 0,
-                }).format(contractProps.s)}
-Placement fee: ${contractProps.f * (1 - discountPercentage)}%
-Expected contract cost: ${new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                  maximumFractionDigits: 0,
-                }).format(cost || 0)}
-${options.length > 0 ? "\nOptions:\n- " + options.join("\n- ") + "\n" : ""}
-Link: ${window.location.origin}?${queryString}`
-              );
-              const shareLink = `mailto:gabriel@silver.dev?subject=${emailSubject}&body=${emailBody}`;
-              setShareLink(shareLink);
-            }}
-          >
-            <Link target="_blank" href={shareLink}>
-              Share with Gabriel
-            </Link>
-          </Button>
+      <main>
+        <div className="text-center m-24 space-y-12">
+          <h1 className="text-6xl font-serif">Here it goes the title.</h1>
+          <p className="max-w-prose mx-auto">
+            And here it goes a short description explaining what this thing is
+            for. But I think it should be a little longer, so this is some
+            filler text.
+          </p>
         </div>
-        <div className="flex flex-col flex-grow">
-          <div className="flex gap-1.5 mb-12">
-            <Card className="w-1/2 text-center">
-              <CardHeader className="h-full">
-                <CardTitle className="text-6xl my-auto font-serif">
-                  <NumberFlow prefix="$" value={cost || 0} />
-                </CardTitle>
-                <CardDescription>Expected contract cost</CardDescription>
-              </CardHeader>
-            </Card>
-            <Card className="w-1/2 text-center">
-              <CardHeader className="h-full">
-                <CardTitle className="text-6xl my-auto font-serif">
-                  <NumberFlow
-                    suffix="%"
-                    value={contractProps.f * (1 - discountPercentage)}
-                  />
-                </CardTitle>
-                <CardDescription>Placement fee</CardDescription>
-              </CardHeader>
-            </Card>
+        <div className="flex flex-col xl:flex-row gap-12 container mx-auto flex-grow m-12">
+          <div className="flex flex-col gap-4 sm:max-w-xs">
+            <div className="flex flex-col gap-2">
+              <p>Number of placements:</p>
+              <CardRadioGroup
+                name="n"
+                onValueChange={(value) => setContractProp("n", value)}
+                currentValue={contractProps.n.toString()}
+                options={[
+                  { value: "1", label: "1" },
+                  { value: "2", label: "2" },
+                  { value: "3", label: "3+" },
+                ]}
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <p>Expected Average Salary:</p>
+              <CardRadioGroup
+                name="s"
+                onValueChange={(value) => setContractProp("s", value)}
+                currentValue={contractProps.s.toString()}
+                options={[
+                  { value: "50000", label: "$50k" },
+                  { value: "75000", label: "$75k" },
+                  { value: "100000", label: "$100k+" },
+                ]}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              {booleanProps.map(([key, label, description]) => {
+                return (
+                  <Label key={key} htmlFor={key}>
+                    <Card
+                      className={`transition-colors hover:bg-primary/10 cursor-pointer ${
+                        contractProps[key as keyof ContractProps] &&
+                        "border-primary"
+                      }`}
+                    >
+                      <CardHeader className="p-4">
+                        <CardTitle className="flex gap-1.5">
+                          <Checkbox
+                            id={key}
+                            onCheckedChange={(checked) =>
+                              setContractProp(key, checked)
+                            }
+                            checked={contractProps[key as keyof ContractProps]}
+                          />
+                          {label}
+                        </CardTitle>
+                        <CardDescription>{description}</CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </Label>
+                );
+              })}
+            </div>
+            <Button
+              asChild
+              className="bg-gradient-to-br from-zinc-500 via-zinc-50 to-zinc-500 duration-300 transition-all hover:opacity-50"
+              onClick={() => {
+                const queryString = Object.entries(contractProps)
+                  .filter(([key, value]) => value)
+                  .map(([key, value]) => `${key}=${value}`)
+                  .join("&");
+                const options: string[] = booleanProps
+                  .filter(([key]) => contractProps[key] === true)
+                  .map(([key, label]) => label);
+                const emailSubject = encodeURIComponent("Contract Details");
+                const emailBody = encodeURIComponent(
+                  `Number of placements: ${contractProps.n}
+        Expected average salary: ${new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 0,
+        }).format(contractProps.s)}
+        Placement fee: ${contractProps.f * (1 - discountPercentage)}%
+        Expected contract cost: ${new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 0,
+        }).format(cost || 0)}
+        ${
+          options.length > 0
+            ? "\nOptions:\n- " + options.join("\n- ") + "\n"
+            : ""
+        }
+        Link: ${window.location.origin}?${queryString}`
+                );
+                const shareLink = `mailto:gabriel@silver.dev?subject=${emailSubject}&body=${emailBody}`;
+                setShareLink(shareLink);
+              }}
+            >
+              <Link target="_blank" href={shareLink}>
+                Share with Gabriel
+              </Link>
+            </Button>
           </div>
-          <ChartContainer
-            config={{
-              fee: {
-                label: "Fee",
-              },
-              payroll: {
-                label: "Payroll",
-              },
-            }}
-            className="w-full min-h-80"
-          >
-            <BarChart accessibilityLayer data={chartData}>
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="payroll" fill="#fa4529" stackId={1} />
-              <Bar dataKey="fee" fill="white" stackId={1} />
-              <YAxis
-                tickLine={false}
-                orientation="right"
-                dataKey="yAxis"
-                tickFormatter={
-                  new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                    maximumFractionDigits: 0,
-                  }).format
-                }
-              />
-              <XAxis
-                dataKey="month"
-                tickFormatter={(month) => month.slice(0, 3)}
-                tickMargin={12}
-              />
-            </BarChart>
-          </ChartContainer>
+          <div className="flex flex-col flex-grow">
+            <div className="flex gap-1.5 mb-12">
+              <Card className="w-1/2 text-center">
+                <CardHeader className="h-full">
+                  <CardTitle className="text-6xl my-auto font-serif">
+                    <NumberFlow prefix="$" value={cost || 0} />
+                  </CardTitle>
+                  <CardDescription>Expected contract cost</CardDescription>
+                </CardHeader>
+              </Card>
+              <Card className="w-1/2 text-center">
+                <CardHeader className="h-full">
+                  <CardTitle className="text-6xl my-auto font-serif">
+                    <NumberFlow
+                      suffix="%"
+                      value={contractProps.f * (1 - discountPercentage)}
+                    />
+                  </CardTitle>
+                  <CardDescription>Placement fee</CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
+            <ChartContainer
+              config={{
+                fee: {
+                  label: "Fee",
+                },
+                payroll: {
+                  label: "Payroll",
+                },
+              }}
+              className="w-full min-h-80"
+            >
+              <BarChart accessibilityLayer data={chartData}>
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Bar dataKey="payroll" fill="#fa4529" stackId={1} />
+                <Bar dataKey="fee" fill="white" stackId={1} />
+                <YAxis
+                  tickLine={false}
+                  orientation="right"
+                  dataKey="yAxis"
+                  tickFormatter={
+                    new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                      maximumFractionDigits: 0,
+                    }).format
+                  }
+                />
+                <XAxis
+                  dataKey="month"
+                  tickFormatter={(month) => month.slice(0, 3)}
+                  tickMargin={12}
+                />
+              </BarChart>
+            </ChartContainer>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

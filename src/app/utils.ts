@@ -13,6 +13,13 @@ export interface ContractProps {
   [key: string]: any;
 }
 
+export function getDiscountPercentage({ ...data }: ContractProps) {
+  if (data.d) return 0;
+  if (data.h || data.n >= 3) return 0.25;
+  if (data.x || data.t) return 0.15;
+  return 0;
+}
+
 export function calculateContractCost(
   data: ContractProps,
   includePayroll: boolean = true,
@@ -22,12 +29,8 @@ export function calculateContractCost(
   if (data.p && includePayroll) {
     value += payrollCost * 12;
   }
-  if (!data.d && includeDiscounts) {
-    if (data.h || data.n >= 3) {
-      value -= value * 0.25;
-    } else if (data.x || data.t) {
-      value -= value * 0.15;
-    }
+  if (includeDiscounts) {
+    value -= value * getDiscountPercentage(data);
   }
   return value;
 }

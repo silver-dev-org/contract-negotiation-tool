@@ -4,10 +4,11 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import NumberFlow from "@number-flow/react";
 import Image from "next/image";
 
-import { ContractProps } from "@/app/utils";
+import { ContractProps, getDiscountPercentage } from "@/app/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,25 +17,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Label } from "@radix-ui/react-label";
-import { scaleLog } from "d3-scale";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import CurrencyInput from "react-currency-input-field";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 import SilverLogoWhite from "../../public/silver-logo-white.svg";
 
 import { calculateContractCost, payrollCost } from "./utils";
-const scale = scaleLog().base(Math.E);
 
 export default function Page() {
   const searchParams = useSearchParams();
   const [chartData, setChartData] = useState<any[]>([]);
   const [cost, setCost] = useState<number>();
   const [shareLink, setShareLink] = useState("");
+  const [discountPercentage, setDiscountPercentage] = useState(0);
   const [contractProps, setContractProps] = useState<ContractProps>({
     n: getParam("n", 1),
     f: getParam("f", 20),
@@ -56,6 +54,7 @@ export default function Page() {
   useEffect(() => processContractProps(contractProps), [contractProps]);
 
   function processContractProps(props: ContractProps) {
+    console.log(props);
     const startingMonth = props.d ? 6 : 3;
     const chartData = [];
     const yAxis = 1000 + calculateContractCost(props, false, false);
@@ -76,6 +75,7 @@ export default function Page() {
       });
     }
     setChartData(chartData);
+    setDiscountPercentage(getDiscountPercentage(props));
     setCost(calculateContractCost(props));
   }
 
@@ -95,74 +95,74 @@ export default function Page() {
       </header>
       <div className="flex flex-col xl:flex-row gap-12 p-12 container mx-auto flex-grow">
         <div className="flex flex-col gap-4 sm:max-w-xs">
-          <div className="flex flex-col  gap-1.5">
-            <Label htmlFor="numberOfPlacementsInput">
-              Number of placements:
-            </Label>
-            <Input
-              id="numberOfPlacementsInput"
-              type="number"
-              min={1}
-              step={1}
-              defaultValue={contractProps.n}
-              onInput={(e) => setContractProp("n", e.currentTarget.value)}
+          <div className="flex flex-col gap-2">
+            <p>Number of placements:</p>
+            <CardRadioGroup
+              name="n"
+              onValueChange={(value) => setContractProp("n", value)}
+              currentValue={contractProps.n.toString()}
+              options={[
+                { value: "1", label: "1" },
+                { value: "2", label: "2" },
+                { value: "3", label: "3+" },
+              ]}
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="expectedAverageSalaryInput">
-              Expected Average Salary:
-            </Label>
-            <CurrencyInput
-              className={cn(
-                "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              )}
-              id="expectedAverageSalaryInput"
-              placeholder="Enter a number"
-              prefix="$"
-              decimalsLimit={2}
-              allowNegativeValue={false}
-              defaultValue={contractProps.s}
-              onValueChange={(value, _, values) =>
-                setContractProp("s", values?.float || 0)
-              }
+            <p>Expected Average Salary:</p>
+            <CardRadioGroup
+              name="s"
+              onValueChange={(value) => setContractProp("s", value)}
+              currentValue={contractProps.s.toString()}
+              options={[
+                { value: "50000", label: "50k" },
+                { value: "75000", label: "75k" },
+                { value: "100000", label: "100k+" },
+              ]}
             />
           </div>
-          {[
-            ["x", "Exclusivity", "Each role is handled by only one agency."],
-            ["p", "Payroll", "Delegate wages management."],
-            ["d", "Deferred payment", "Pay 6 months after the hire was made."],
-            ["g", "Pay as you go", "Pay in 3 months instead of all at once."],
-            [
-              "t",
-              "Strong guarantee",
-              "No fee will be due until the guarantee period (90 calendar days) is over.",
-            ],
-          ].map(([key, label, description]) => {
-            return (
-              <Label key={key} htmlFor={key}>
-                <Card
-                  className={`transition-colors hover:bg-primary/10 cursor-pointer ${
-                    contractProps[key as keyof ContractProps] &&
-                    "border-primary"
-                  }`}
-                >
-                  <CardHeader className="p-4">
-                    <CardTitle className="flex gap-1.5">
-                      <Checkbox
-                        id={key}
-                        onCheckedChange={(checked) =>
-                          setContractProp(key, checked)
-                        }
-                        checked={contractProps[key as keyof ContractProps]}
-                      />
-                      {label}
-                    </CardTitle>
-                    <CardDescription>{description}</CardDescription>
-                  </CardHeader>
-                </Card>
-              </Label>
-            );
-          })}
+          <div className="flex flex-col gap-2">
+            {[
+              ["x", "Exclusivity", "Each role is handled by only one agency."],
+              ["p", "Payroll", "Delegate wages management."],
+              [
+                "d",
+                "Deferred payment",
+                "Pay 6 months after the hire was made.",
+              ],
+              ["g", "Pay as you go", "Pay in 3 months instead of all at once."],
+              [
+                "t",
+                "Strong guarantee",
+                "No fee will be due until the guarantee period (90 calendar days) is over.",
+              ],
+            ].map(([key, label, description]) => {
+              return (
+                <Label key={key} htmlFor={key}>
+                  <Card
+                    className={`transition-colors hover:bg-primary/10 cursor-pointer ${
+                      contractProps[key as keyof ContractProps] &&
+                      "border-primary"
+                    }`}
+                  >
+                    <CardHeader className="p-4">
+                      <CardTitle className="flex gap-1.5">
+                        <Checkbox
+                          id={key}
+                          onCheckedChange={(checked) =>
+                            setContractProp(key, checked)
+                          }
+                          checked={contractProps[key as keyof ContractProps]}
+                        />
+                        {label}
+                      </CardTitle>
+                      <CardDescription>{description}</CardDescription>
+                    </CardHeader>
+                  </Card>
+                </Label>
+              );
+            })}
+          </div>
           <Button
             asChild
             className="bg-gradient-to-br from-zinc-500 via-zinc-50 to-zinc-500 duration-300 transition-all hover:opacity-50"
@@ -185,7 +185,7 @@ export default function Page() {
           </Button>
         </div>
         <div className="flex flex-col flex-grow">
-          <div className="flex gap-3 mb-12">
+          <div className="flex gap-1.5 mb-12">
             <Card className="w-1/2 text-center">
               <CardHeader className="h-full">
                 <CardTitle className="text-6xl my-auto font-serif">
@@ -197,7 +197,10 @@ export default function Page() {
             <Card className="w-1/2 text-center">
               <CardHeader className="h-full">
                 <CardTitle className="text-6xl my-auto font-serif">
-                  {contractProps.f}%
+                  <NumberFlow
+                    suffix="%"
+                    value={contractProps.f * (1 - discountPercentage)}
+                  />
                 </CardTitle>
                 <CardDescription>Placement fee</CardDescription>
               </CardHeader>
@@ -240,5 +243,41 @@ export default function Page() {
         </div>
       </div>
     </div>
+  );
+}
+
+function CardRadioGroup({
+  options,
+  name,
+  onValueChange,
+  currentValue,
+}: {
+  options: { value: string; label: string }[];
+  name: string;
+  onValueChange: (value: string) => void;
+  currentValue?: string;
+}) {
+  return (
+    <RadioGroup value={currentValue || ""} className="flex gap-2">
+      {options.map(({ value, label }) => (
+        <div
+          key={value}
+          className={cn(
+            "flex-grow flex items-center justify-center gap-2 p-1 border rounded-lg cursor-pointer hover:bg-primary/10 transition-all",
+            currentValue === value ? "border-primary" : "border-border"
+          )}
+          onClick={() => onValueChange(value)}
+        >
+          <RadioGroupItem
+            className="hidden"
+            value={value}
+            id={`${name}-${value}`}
+          />
+          <Label htmlFor={`${name}-${value}`} className="cursor-pointer">
+            {label}
+          </Label>
+        </div>
+      ))}
+    </RadioGroup>
   );
 }

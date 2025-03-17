@@ -52,13 +52,13 @@ export default function Page() {
   }
   const booleanProps = [
     ["x", "Exclusivity", "Each role is handled by only one agency."],
-    ["p", "Payroll", "Delegate wages management."],
+    ["p", "Payroll", "We handle payments and contracts. You pay once."],
     ["d", "Deferred payment", "Pay 6 months after the hire was made."],
-    ["g", "Pay as you go", "Pay in 3 months instead of all at once."],
+    ["g", "Pay as you go", "Pay the fee in monthly installments."],
     [
       "t",
       "Strong guarantee",
-      "No fee will be due until the guarantee period (90 calendar days) is over.",
+      "Fee will be due after the guarantee period is over.",
     ],
   ];
 
@@ -105,17 +105,18 @@ export default function Page() {
       </header>
       <main>
         <div className="text-center m-24 space-y-12">
-          <h1 className="text-6xl font-serif">Here it goes the title.</h1>
+          <h1 className="text-6xl font-serif">
+            Silver.dev Services Pricing Tool
+          </h1>
           <p className="max-w-prose mx-auto">
-            And here it goes a short description explaining what this thing is
-            for. But I think it should be a little longer, so this is some
-            filler text.
+            Choose terms and conditions to understand pricing and send them
+            directly to Silver.dev for review.
           </p>
         </div>
         <div className="flex flex-col xl:flex-row gap-12 container mx-auto flex-grow m-12">
           <div className="flex flex-col gap-4 sm:max-w-xs">
             <div className="flex flex-col gap-2">
-              <p>Number of placements:</p>
+              <p>Expected Headcount:</p>
               <CardRadioGroup
                 name="n"
                 onValueChange={(value) => setContractProp("n", value)}

@@ -105,10 +105,11 @@ export default function Page() {
       </header>
       <main>
         <div className="text-center m-24 space-y-12">
-          <h1 className="text-6xl font-serif">
-            Silver.dev Services Pricing Tool
+          <h1 className="text-9xl font-serif">
+            Silver.dev Services <span className="text-[#fa4529]">Pricing</span>{" "}
+            Tool
           </h1>
-          <p className="max-w-prose mx-auto">
+          <p className="text-center text-balance max-w-prose mx-auto text-4xl">
             Choose terms and conditions to understand pricing and send them
             directly to Silver.dev for review.
           </p>

@@ -96,22 +96,38 @@ export default function Page() {
     }));
   }
 
+  const btnStyle = {
+    color: "white",
+    fontWeight: "bold",
+    backgroundColor: "#e03d24",
+    padding: "10px 20px",
+    borderRadius: "3px",
+    border: "1px solid white",
+    textTransform: "uppercase",
+    marginRight: "20px",
+  };
+
   return (
     <div className="flex flex-col h-screen">
-      <header className="text-foreground font-serif flex justify-between items-center p-4 border-b">
+      <header className="text-foreground font-serif flex justify-between items-center border-b">
         <a href="https://silver.dev" target="_blank">
           <Image width={200} src={SilverLogoWhite} alt="Silver.dev" />
+        </a>
+        <a
+          style={btnStyle}
+          href="https://calendly.com/silver-dev/companies"
+          target="_blank"
+        >
+          Book with Gabriel
         </a>
       </header>
       <main>
         <div className="text-center m-24 space-y-12">
-          <h1 className="text-9xl font-serif">
-            Silver.dev Services <span className="text-[#fa4529]">Pricing</span>{" "}
-            Tool
+          <h1 className="text-6xl font-serif">
+            Agency Fees <span className="text-[#fa4529]">Explained</span>
           </h1>
-          <p className="text-center text-balance max-w-prose mx-auto text-4xl">
-            Choose terms and conditions to understand pricing and send them
-            directly to Silver.dev for review.
+          <p className="text-center text-balance max-w-prose mx-auto text-3xl">
+            Adjust terms, explore options, and share your estimate with Silver.
           </p>
         </div>
         <div className="flex flex-col xl:flex-row gap-12 container mx-auto flex-grow m-12">
@@ -196,7 +212,7 @@ Expected contract cost: ${new Intl.NumberFormat("en-US", {
                     maximumFractionDigits: 0,
                   }).format(cost || 0)}
 ${options.length > 0 ? "\nOptions:\n- " + options.join("\n- ") + "\n" : ""}
-Link: ${window.location.origin}?${queryString}`
+Link: ${window.location.origin}?${queryString}`,
                 );
                 const shareLink = `mailto:gabriel@silver.dev?subject=${emailSubject}&body=${emailBody}`;
                 setShareLink(shareLink);
@@ -288,7 +304,7 @@ function CardRadioGroup({
           key={value}
           className={cn(
             "flex-grow flex items-center justify-center gap-2 p-1 border rounded-lg cursor-pointer hover:bg-primary/10 transition-all",
-            currentValue === value ? "border-primary" : "border-border"
+            currentValue === value ? "border-primary" : "border-border",
           )}
           onClick={() => onValueChange(value)}
         >

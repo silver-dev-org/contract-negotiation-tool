@@ -96,16 +96,6 @@ export default function Page() {
     }));
   }
 
-  const btnStyle = {
-    color: "white",
-    fontWeight: "bold",
-    backgroundColor: "#e03d24",
-    padding: "10px 20px",
-    borderRadius: "3px",
-    border: "1px solid white",
-    marginRight: "20px",
-  };
-
   return (
     <div className="flex flex-col h-screen">
       <header className="text-foreground font-serif flex justify-between items-center border-b">
@@ -113,7 +103,17 @@ export default function Page() {
           <Image width={200} src={SilverLogoWhite} alt="Silver.dev" />
         </a>
         <a
-          style={btnStyle}
+          style={{
+            color: "white",
+            fontWeight: "bold",
+            backgroundColor: "#e03d24",
+            padding: "10px 20px",
+            borderRadius: "3px",
+            border: "1px solid white",
+            margin: "10px",
+            textWrap: "nowrap",
+            fontSize: "14px",
+          }}
           className="uppercase"
           href="https://calendly.com/silver-dev/companies"
           target="_blank"
@@ -122,16 +122,16 @@ export default function Page() {
         </a>
       </header>
       <main>
-        <div className="text-center m-24 space-y-12">
-          <h1 className="text-6xl font-serif">
+        <div className="text-center m-12 sm:m-24 space-y-12">
+          <h1 className="text-6xl/snug font-serif">
             Agency Fees <span className="text-[#fa4529]">Explained</span>
           </h1>
-          <p className="text-center text-balance max-w-prose mx-auto text-3xl">
+          <p className="text-center text-balance max-w-prose mx-auto text-2xl sm:text-3xl">
             Adjust terms, explore options, and share your estimate with Silver.
           </p>
         </div>
-        <div className="flex flex-col xl:flex-row gap-12 container mx-auto flex-grow m-12">
-          <div className="flex flex-col gap-4 sm:max-w-xs">
+        <div className="flex flex-col lg:flex-row gap-12 flex-grow p-4 sm:container sm:mx-auto">
+          <div className="flex flex-col gap-4 lg:max-w-xs">
             <div className="flex flex-col gap-2">
               <p>Expected Headcount:</p>
               <CardRadioGroup
@@ -212,7 +212,7 @@ Expected contract cost: ${new Intl.NumberFormat("en-US", {
                     maximumFractionDigits: 0,
                   }).format(cost || 0)}
 ${options.length > 0 ? "\nOptions:\n- " + options.join("\n- ") + "\n" : ""}
-Link: ${window.location.origin}?${queryString}`,
+Link: ${window.location.origin}?${queryString}`
                 );
                 const shareLink = `mailto:gabriel@silver.dev?subject=${emailSubject}&body=${emailBody}`;
                 setShareLink(shareLink);
@@ -227,7 +227,7 @@ Link: ${window.location.origin}?${queryString}`,
             <div className="flex gap-1.5 mb-12">
               <Card className="w-1/2 text-center">
                 <CardHeader className="h-full">
-                  <CardTitle className="text-6xl my-auto font-serif">
+                  <CardTitle className="text-3xl sm:text-6xl my-auto font-serif">
                     <NumberFlow prefix="$" value={cost || 0} />
                   </CardTitle>
                   <CardDescription>Expected contract cost</CardDescription>
@@ -235,7 +235,7 @@ Link: ${window.location.origin}?${queryString}`,
               </Card>
               <Card className="w-1/2 text-center">
                 <CardHeader className="h-full">
-                  <CardTitle className="text-6xl my-auto font-serif">
+                  <CardTitle className="text-3xl sm:text-6xl my-auto font-serif">
                     <NumberFlow
                       suffix="%"
                       value={contractProps.f * (1 - discountPercentage)}
@@ -304,7 +304,7 @@ function CardRadioGroup({
           key={value}
           className={cn(
             "flex-grow flex items-center justify-center gap-2 p-1 border rounded-lg cursor-pointer hover:bg-primary/10 transition-all",
-            currentValue === value ? "border-primary" : "border-border",
+            currentValue === value ? "border-primary" : "border-border"
           )}
           onClick={() => onValueChange(value)}
         >

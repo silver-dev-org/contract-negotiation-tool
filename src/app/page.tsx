@@ -103,7 +103,6 @@ export default function Page() {
     padding: "10px 20px",
     borderRadius: "3px",
     border: "1px solid white",
-    textTransform: "uppercase",
     marginRight: "20px",
   };
 
@@ -115,6 +114,7 @@ export default function Page() {
         </a>
         <a
           style={btnStyle}
+          className="uppercase"
           href="https://calendly.com/silver-dev/companies"
           target="_blank"
         >

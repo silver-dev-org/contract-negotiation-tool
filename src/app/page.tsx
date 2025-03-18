@@ -98,7 +98,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col h-screen">
-      <header className="text-foreground font-serif flex justify-between items-center border-b">
+      <header className="flex justify-between items-center border-b">
         <a href="https://silver.dev" target="_blank">
           <Image width={200} src={SilverLogoWhite} alt="Silver.dev" />
         </a>
@@ -106,15 +106,13 @@ export default function Page() {
           style={{
             color: "white",
             fontWeight: "bold",
-            backgroundColor: "#e03d24",
             padding: "10px 20px",
             borderRadius: "3px",
             border: "1px solid white",
-            margin: "10px",
             textWrap: "nowrap",
-            fontSize: "14px",
+            fontSize: "16px",
           }}
-          className="uppercase"
+          className="uppercase hover:-translate-y-0.5 m-4 transition-all bg-[#e03d24] hover:bg-[#fa4529] duration-300"
           href="https://calendly.com/silver-dev/companies"
           target="_blank"
         >
